@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="/css/login.css"> <!-- Asegúrate de que esta ruta a tu CSS sea correcta -->
+    <title>Login | Node.js EJS</title>
+</head>
+
+<body>
+
+    <div class="container" id="container">
+        <!-- Formulario de Registro -->
+      <!-- Formulario de Registro -->
+<div class="form-container sign-up">
+    <form action="/register" method="POST">
+        <h1>Crear Cuenta</h1>
+        <span>Usar Email y Contraseña</span>
+        <input type="text" placeholder="Name" name="nombre" required>
+        <input type="email" placeholder="Email" name="email" required>
+        <input type="password" placeholder="Password" name="contra" required>
+        <button type="submit">Sign Up</button>
+        <% if (message && messageType === 'register') { %>
+            <p style="color: red;"><%= message %></p>
+        <% } %>
+    </form>
+</div>
+
+<!-- Formulario de Login -->
+<div class="form-container sign-in">
+    <form action="/auth" method="POST">
+        <h1>Iniciar Sesión</h1>
+        <span>Usar Email y Contraseña</span>
+        <input type="email" placeholder="Email" name="email" required>
+        <input type="password" placeholder="Password" name="contra" required>
+        <% if (message && messageType === 'login') { %>
+            <p style="color: red;"><%= message %></p>
+        <% } %>
+        <button type="submit">Iniciar</button>
+        <a href="/"><- ir al inicio</a>
+    </form>
+</div>
+
+        <!-- Panel de alternancia entre login y registro -->
+        <div class="toggle-container">
+            <div class="toggle">
+                <div class="toggle-panel toggle-left">
+                    <h1>¡Bienvenido de nuevo!</h1>
+                    <p>Ingresa tus datos personales para utilizar todas las funciones del sitio.</p>
+                    <button class="hidden" id="login">Iniciar sesión</button>
+                </div>
+                <div class="toggle-panel toggle-right">
+                    <h1>Hola, Amig@!</h1>
+                    <p>Regístrate con tus datos personales para utilizar todas las funciones del sitio.</p>
+                    <button class="hidden" id="register">Registrarse</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        if (window.performance && window.performance.navigation.type === window.performance.navigation.TYPE_BACK_FORWARD) {
+          window.location.reload();
+        }
+    </script>
+    <script src="/js/login.js"></script>
+</body>
+
+</html>

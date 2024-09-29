@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/home.css">
+  <title>Alumnos</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- DataTables CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+
+  <style>
+    /* Oculta el formulario inicialmente */
+    #addStudentForm {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="flex-container"> <!-- Inicia el contenedor flex -->
+
+    <%- include('../partials/sidebar.ejs') %> <!-- Sidebar fuera del contenedor de contenido principal -->
+
+    <main class="main-content"> <!-- El contenido principal -->
+      <div class="container">
+        <h1 class="my-4">Lista de Alumnos</h1>
+
+        <!-- Botón para mostrar el formulario -->
+        <button id="toggleFormBtn" class="btn btn-primary mb-4">Agregar Alumno</button>
+
+        <!-- Formulario para agregar un nuevo alumno -->
+        <form id="addStudentForm" action="/add" method="POST" class="mb-4">
+          <h2>Agregar Alumno</h2>
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <input type="text" name="id" class="form-control" placeholder="ID" required>
+            </div>
+            <div class="form-group col-md-4">
+              <input type="text" name="nombre" class="form-control" placeholder="Nombre" required>
+            </div>
+            <div class="form-group col-md-4">
+              <input type="text" name="apellidoPaterno" class="form-control" placeholder="Apellido Paterno" required>
+            </div>
+            <div class="form-group col-md-4">
+              <input type="text" name="apellidoMaterno" class="form-control" placeholder="Apellido Materno" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <input type="number" name="calificacion1" class="form-control" placeholder="Calificación 1" required>
+            </div>
+            <div class="form-group col-md-4">
+              <input type="number" name="calificacion2" class="form-control" placeholder="Calificación 2" required>
+            </div>
+            <div class="form-group col-md-4">
+              <input type="number" name="calificacion3" class="form-control" placeholder="Calificación 3" required>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">Agregar</button>
+        </form>
+
+        <!-- Tabla de alumnos -->
+        <table id="alumnosTable" class="display table table-striped table-bordered">
+          <thead>
+            <tr>
+              <th>Matricula</th>
+              <th>Nombre</th>
+              <th>Apellido Paterno</th>
+              <th>Apellido Materno</th>
+              <th>P1</th>
+              <th>P2</th>
+              <th>P3</th>
+              <th>promedio</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% data.forEach(function(alumno) { %>
+              <tr>
+                <td><%= alumno.id %></td>
+                <td><%= alumno.nombre %></td>
+                <td><%= alumno.apellidoPaterno %></td>
+                <td><%= alumno.apellidoMaterno %></td>
+                <td><%= alumno.calificacion1 %></td>
+                <td><%= alumno.calificacion2 %></td>
+                <td><%= alumno.calificacion3 %></td>
+                <td><%= alumno.promedio %></td>
+                <td>
+                  <!-- Enlace para eliminar un alumno -->
+                  <a href="/delete/<%= alumno.id %>" class="btn btn-danger btn-sm delete-button" data-id="<%= alumno.id %>">Eliminar</a>
+                  <!-- Botón para editar un alumno -->
+                  <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editModal<%= alumno.id %>">
+                    Editar
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Modal para editar alumno -->
+              <div class="modal fade" id="editModal<%= alumno.id %>" tabindex="-1" role="dialog" aria-labelledby="editModalLabel<%= alumno.id %>" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="editModalLabel<%= alumno.id %>">Editar Alumno</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form class="edit-form" action="/edit/<%= alumno.id %>" method="POST">
+                        <div class="form-group">
+                          <label for="nombre">Nombre</label>
+                          <input type="text" name="nombre" class="form-control" value="<%= alumno.nombre %>" required>
+                        </div>
+                        <div class="form-group">
+                          <label for="apellidoPaterno">Apellido Paterno</label>
+                          <input type="text" name="apellidoPaterno" class="form-control" value="<%= alumno.apellidoPaterno %>" required>
+                        </div>
+                        <div class="form-group">
+                          <label for="apellidoMaterno">Apellido Materno</label>
+                          <input type="text" name="apellidoMaterno" class="form-control" value="<%= alumno.apellidoMaterno %>" required>
+                        </div>
+                        <div class="form-group">
+                          <label for="calificacion1">Calificación 1</label>
+                          <input type="number" name="calificacion1" class="form-control" value="<%= alumno.calificacion1 %>" required>
+                        </div>
+                        <div class="form-group">
+                          <label for="calificacion2">Calificación 2</label>
+                          <input type="number" name="calificacion2" class="form-control" value="<%= alumno.calificacion2 %>" required>
+                        </div>
+                        <div class="form-group">
+                          <label for="calificacion3">Calificación 3</label>
+                          <input type="number" name="calificacion3" class="form-control" value="<%= alumno.calificacion3 %>" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div> <!-- Cierra el contenedor flex -->
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- DataTables JS -->
+  <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+  <!-- Custom JS -->
+  <script src="/js/fun.js"></script>
+  <script src="/js/form.js"></script>
+</body>
+</html>

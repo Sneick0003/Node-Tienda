@@ -1,0 +1,47 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #000000;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    color: #ffffff;
+    text-align: center;
+}
+
+div.item {
+    background-color: transparent;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin: 10px auto;
+    padding: 10px;
+    width: 80%;
+    border-radius: 8px;
+    border: 2px solid white;  /* Agrega un contorno blanco */
+}
+
+
+p {
+    font-size: 16px;
+    color: #ffffff;
+}
+
+form {
+    text-align: center;
+    margin-top: 20px;
+}
+
+button {
+    background-color: #5cb85c;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+button:hover {
+    background-color: #4cae4c;
+}

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Productos</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- DataTables CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+</head>
+<body>
+
+  <div class="page-wrapper">
+    <%- include('../partials/sidebar.ejs') %> <!-- Incluye la barra lateral -->
+
+    <div class="main-content">
+      <h1 class="my-4">Lista de Productos</h1>
+
+      <!-- Botón para mostrar el formulario -->
+      <button id="toggleFormBtn" class="btn btn-primary mb-4">Agregar Producto</button>
+
+      <!-- Formulario para agregar un nuevo producto -->
+      <form id="addProductForm" action="/productos/add" method="POST" class="mb-4" style="display: none;">
+        <h2>Agregar Producto</h2>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <input type="text" name="nombre" class="form-control" placeholder="Nombre" required>
+          </div>
+          <div class="form-group col-md-6">
+            <input type="text" name="descripcion" class="form-control" placeholder="Descripción" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <input type="number" name="precio" class="form-control" placeholder="Precio" required>
+          </div>
+          <div class="form-group col-md-6">
+            <input type="number" name="cantidad_en_almacen" class="form-control" placeholder="Cantidad en Almacén" required>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Agregar</button>
+      </form>
+
+      <!-- Tabla de productos -->
+      <table id="productosTable" class="display table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+            <th>Cantidad en Almacén</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% productos.forEach(function(producto) { %>
+            <tr>
+              <td><%= producto.id %></td>
+              <td><%= producto.nombre %></td>
+              <td><%= producto.descripcion %></td>
+              <td><%= producto.precio %></td>
+              <td><%= producto.cantidad_en_almacen %></td>
+              <td>
+                <!-- Enlace para eliminar un producto -->
+                <a href="/productos/delete/<%= producto.id %>"  class="btn btn-danger btn-sm delete-button" data-id="<%= producto.id %>">Eliminar</a>
+                <!-- Botón para editar un producto -->
+                <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editModal<%= producto.id %>">
+                  Editar
+                </button>
+              </td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modales de edición -->
+  <% productos.forEach(function(producto) { %>
+    <div class="modal fade" id="editModal<%= producto.id %>" tabindex="-1" role="dialog" aria-labelledby="editModalLabel<%= producto.id %>" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editModalLabel<%= producto.id %>">Editar Producto</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form class="edit-form" action="/productos/edit/<%= producto.id %>" method="POST">
+              <div class="form-group">
+                <label for="nombre">Nombre</label>
+                <input type="text" name="nombre" class="form-control" value="<%= producto.nombre %>" required>
+              </div>
+              <div class="form-group">
+                <label for="descripcion">Descripción</label>
+                <input type="text" name="descripcion" class="form-control" value="<%= producto.descripcion %>" required>
+              </div>
+              <div class="form-group">
+                <label for="precio">Precio</label>
+                <input type="number" name="precio" class="form-control" value="<%= producto.precio %>" required>
+              </div>
+              <div class="form-group">
+                <label for="cantidad_en_almacen">Cantidad en Almacén</label>
+                <input type="number" name="cantidad_en_almacen" class="form-control" value="<%= producto.cantidad_en_almacen %>" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% }); %>
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- DataTables JS -->
+  <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+  <!-- Custom JS -->
+  <script src="/js/productos.js"></script>
+</body>
+</html>

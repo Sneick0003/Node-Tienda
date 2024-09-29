@@ -1,0 +1,79 @@
+/* General */
+body, html {
+  background-color: black;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+  
+  .content-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  .main-content {
+    flex: 1;
+  }
+  
+  .flex-container {
+    display: flex;
+    height: 100%;
+    width: 100%;
+  }
+  
+  .flex-1 {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+ 
+  /* Hero Image */
+  .hero-image {
+    width: 550px; /* Tamaño del círculo */
+    height: 550px; /* Tamaño del círculo */
+    object-fit: cover;
+  }
+  
+  .text-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 16px;
+    padding: 16px;
+  }
+  
+  .text-content {
+    margin-bottom: 16px;
+  }
+  
+  .title {
+    font-size: 2rem;
+    color: rgb(245, 248, 215);
+    font-weight: bold;
+    text-shadow: 
+    0 0 5px #fff700,
+    0 0 10px #fff700,
+    0 0 20px #fff700,
+    0 0 30px #fff700,
+    0 0 40px #fff700,
+    0 0 50px #fff700,
+    0 0 60px #fff700;
+  }
+  
+  .subtitle {
+    font-size: 1.25rem;
+    color: rgb(245, 248, 215);
+    text-shadow: 
+    0 0 5px #fff700,
+    0 0 10px #fff700,
+    0 0 20px #fff700,
+    0 0 30px #fff700,
+    0 0 40px #fff700,
+    0 0 50px #fff700,
+    0 0 60px #fff700;
+  }
+  

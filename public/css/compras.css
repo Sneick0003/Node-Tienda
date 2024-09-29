@@ -1,0 +1,82 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: black;
+    color: #fff; /* Asegura que el texto básico sea visible en un fondo negro */
+}
+
+.product-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.product-card {
+    background-color: #2c2c2c; /* Un gris oscuro que se distingue del negro */
+    border: 1px solid #555; /* Un borde más claro para diferenciar el card */
+    border-radius: 8px;
+    padding: 20px;
+    margin: 10px;
+    width: 300px;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1); /* Sombra clara para efecto sutil */
+}
+
+.product-card img {
+    width: 100%;
+    height: auto; /* Cambiado de 200px a auto para mantener la proporción del icono */
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.product-card h2 {
+    color: #ffffff;
+}
+
+.product-card p {
+    color: #ffffff;
+}
+
+.btn-add-cart {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-add-cart:hover {
+    background-color: #45a049;
+}
+
+.shopping-cart {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 300px;
+    background: white;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.btn-checkout {
+    background-color: #008CBA;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-checkout:hover {
+    background-color: #007B9A;
+}
+
+.icono {
+    width: 20px;  /* Tamaño reducido para los iconos */
+    height: 20px; /* Tamaño reducido para los iconos */
+    display: block;
+    margin: auto; /* Centra el icono horizontalmente en la tarjeta */
+}

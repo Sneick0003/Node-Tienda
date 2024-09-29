@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Productos Disponibles</title>
+    <link rel="stylesheet" href="/css/compras.css">
+</head>
+<body>
+    <%- include('../partials/header.ejs') %>
+    <h1>Productos Disponibles</h1>
+    <div class="product-container">
+        <% productos.forEach((producto, index) => { %>
+            <div class="product-card">
+                <div class="card-content">
+                    <% if (index % 6 === 0) { %>
+                        <img class="icono"  src="/img/un-pan.png" alt="Icono 1">
+                    <% } else if (index % 6 === 1) { %>
+                        <img class="icono" src="/img/croissant.png" alt="Icono 2">
+                    <% } else if (index % 6 === 2) { %>
+                        <img class="icono" src="/img/baguette.png" alt="Icono 3">
+                    <% } else if (index % 6 === 3) { %>
+                        <img class="icono" src="/img/hamburguesa.png" alt="Icono 4">
+                    <% } else if (index % 6 === 4) { %>
+                        <img class="icono" src="/img/galletas.png" alt="Icono 5">
+                    <% } else { %>
+                        <img class="icono" src="/img/galleta-salada.png" alt="Icono 6">
+                    <% } %>
+                    <h2><%= producto.nombre %></h2>
+                    <p><%= producto.descripcion %></p>
+                    <p>Precio: $<%= producto.precio.toFixed(2) %></p>
+                    <form action="/carrito/agregar" method="post">
+                        <input type="hidden" name="producto_id" value="<%= producto.id %>">
+                        <input type="number" name="cantidad" min="1" max="<%= producto.cantidad_en_almacen %>" value="1">
+                        <button type="submit" class="btn-add-cart">Agregar al Carrito</button>
+                    </form>
+                </div>
+            </div>
+        <% }); %>
+    </div>
+    <%- include('../partials/footer.ejs') %>
+    <script src="/scripts/toggleCart.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</body>
+</html>

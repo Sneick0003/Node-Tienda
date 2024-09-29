@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Usuario</title>
+    <link rel="stylesheet" href="/css/home.css">
+</head>
+<style>
+    /* Estilos para los botones de tabs */
+.tabs {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.tab {
+    padding: 10px 20px;
+    border: 1px solid #34495e;
+    cursor: pointer;
+    background-color: #ecf0f1;
+    color: #34495e;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+    font-weight: bold;
+}
+
+.tab:not(:last-child) {
+    margin-right: 10px; /* Espaciado entre botones */
+}
+
+.tab.active {
+    background-color: #34495e;
+    color: white;
+}
+
+.tab:hover {
+    background-color: #2c3e50;
+    color: white;
+}
+
+</style>
+
+<body>
+    <div class="flex-container">
+        <%- include('../partials/sidebar.ejs') %> <!-- Sidebar fijo a la izquierda -->
+
+        <main class="main-content">
+            <h1>Dashboard | Usuario</h1>
+            <div class="tabs">
+                <button class="tab active" aria-controls="almacen-content" id="almacen-trigger">Almacén</button>
+                <button class="tab" aria-controls="venta-content" id="venta-trigger">Venta</button>
+            </div>
+            <div class="grid-container" id="cards-container">
+                <% productos.forEach((producto, index) => { %>
+                    <div class="card" data-index="<%= index %>">
+                        <div class="card-content">
+                            <% if (index % 6 === 0) { %>
+                                <img class="icono" src="/img/un-pan.png" alt="Icono 1">
+                            <% } else if (index % 6 === 1) { %>
+                                <img class="icono" src="/img/croissant.png" alt="Icono 2">
+                            <% } else if (index % 6 === 2) { %>
+                                <img class="icono" src="/img/baguette.png" alt="Icono 3">
+                            <% } else if (index % 6 === 3) { %>
+                                <img class="icono" src="/img/hamburguesa.png" alt="Icono 4">
+                            <% } else if (index % 6 === 4) { %>
+                                <img class="icono" src="/img/galletas.png" alt="Icono 5">
+                            <% } else { %>
+                                <img class="icono" src="/img/galleta-salada.png" alt="Icono 6">
+                            <% } %>
+                            <p class="product-name"><%= producto.nombre %></p>
+                            <h3 class="product-quantity almacen"><%= producto.cantidad_en_almacen %> unidades</h3>
+                            <h3 class="product-quantity venta" style="display:none;"><%= producto.cantidad_vendida %> unidades</h3>
+                        </div>
+                        <div class="card-footer">
+                            <div class="progress-bar" aria-label="25% increase">
+                                <div class="progress"></div>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        </main>
+    </div>
+    <script src="/js/dashboard.js"></script> <!-- Agrega el script al final del body -->
+</body>
+
+</html>

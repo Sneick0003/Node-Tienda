@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Tu Carrito</title>
+    <link rel="stylesheet" href="/css/carrito.css">
+</head>
+<body>
+    <%- include('../partials/header.ejs') %>
+
+
+    <h1>Tu Carrito</h1>
+    <% if (carrito.length > 0) { %>
+        <% carrito.forEach(function(item) { %>
+            <div class="item">
+                <p>Producto: <%= item.nombre %></p>
+                <p>ID: <%= item.producto_id %></p>
+                <p>Cantidad: <%= item.cantidad %></p>
+            </div>
+        <% }); %>
+        <form action="/carrito/finalizar" method="post">
+            <button type="submit">Finalizar Compra</button>
+        </form>
+    <% } else { %>
+        <p>No hay productos en tu carrito.</p>
+    <% } %>
+
+    <!-- <%- include('../partials/footer.ejs') %> -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</body>
+</html>
