@@ -36,7 +36,7 @@ app.use(session({
 // Middleware para parsear formularios
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public'))); 
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Rutas públicas
 app.use('/',        require('./routes/index')); // Ruta para la vista raíz

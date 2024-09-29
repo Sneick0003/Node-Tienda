@@ -29,17 +29,12 @@ exports.finalizarCompra = (req, res) => {
         return res.send("No hay productos en el carrito.");
     }
 
-    if (!req.session.user || !req.session.user.id) {
-        return res.status(403).send("Usuario no identificado.");
-    }
-
     req.getConnection((err, conn) => {
         if (err) {
             return res.status(500).send('Error en la conexión a la base de datos: ' + err);
         }
 
         const carrito = req.session.carrito;
-        const usuario_id = req.session.user.id;  // Asegúrate de usar la clave correcta para el usuario_id
         const promises = carrito.map(item => {
             return new Promise((resolve, reject) => {
                 conn.query('UPDATE productos SET cantidad_en_almacen = cantidad_en_almacen - ?, cantidad_vendida = cantidad_vendida + ? WHERE id = ?',
@@ -48,9 +43,8 @@ exports.finalizarCompra = (req, res) => {
                             return reject('Error al actualizar el inventario');
                         }
 
-                        // Inserta la compra con el usuario_id
-                        conn.query('INSERT INTO compras (producto_id, usuario_id, cantidad) VALUES (?, ?, ?)',
-                            [item.producto_id, usuario_id, item.cantidad], (err, results) => {
+                        conn.query('INSERT INTO compras (producto_id, cantidad) VALUES (?, ?)',
+                            [item.producto_id, item.cantidad], (err, results) => {
                                 if (err) {
                                     return reject('Error al registrar la compra');
                                 }
