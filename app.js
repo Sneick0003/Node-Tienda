@@ -11,7 +11,7 @@ const app = express();
 dotenv.config();
 
 // Configuración para la base de datos
-const dbConfig = { 
+const dbConfig = {
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
@@ -39,18 +39,16 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Rutas públicas
-app.use('/',        require('./routes/index')); // Ruta para la vista raíz
+app.use('/', require('./routes/index')); // Ruta para la vista raíz
 
-app.use('/',        require('./routes/login.router')); // Ruta para la Vista login
-app.use('/',        require('./routes/data.router')); // Ruta para la vista de alumnos (pública)
-app.use('/',        require('./routes/producto'));// ruta para comprar productos 
+app.use('/inicio', require('./routes/login.router')); // Ruta para la Vista login
+app.use('/productos', require('./routes/producto'));// ruta para comprar productos 
 
 
 // Rutas protegidas
 app.use('/home', isAuthenticated, require('./routes/home')); // Ruta para después de iniciar sesión (protegida)
-app.use('/', isAuthenticated, require('./routes/producto.router')); // Ruta del CRUD de productos (protegida)
+app.use('/almacen', isAuthenticated, require('./routes/producto.router')); // Ruta del CRUD de productos (protegida)
 app.use('/compras', isAuthenticated, require('./routes/compras'));// ruta para ver las compras
-app.use('/', isAuthenticated, require('./routes/data.router')); // Ruta para la vista de alumnos (pública)
 
 
 

@@ -1,165 +1,57 @@
-/* Estilos generales */
-body, html {
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-  height: 100%;
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f3f3f3;
+    margin: 0;
+    padding: 0;
 }
 
-/* Contenedor Flex para Sidebar y Contenido */
-.flex-container {
-  display: flex;
-  min-height: 100vh;
-  width: 100%;
+.slider-container {
+    position: relative;
+    width: 100%; /* Abarca todo el ancho de la pantalla */
+    max-width: 100vw; /* Máximo ancho de la ventana */
+    overflow: hidden;
+    height: 300px; /* Ajusta la altura del slider */
+    margin: 100px auto 0; /* Margen superior de 20px */
 }
 
-/* Sidebar fijo a la izquierda */
-.sidebar {
-  width: 250px;
-  background-color: #2c3e50;
-  color: #ecf0f1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  z-index: 1000;
+.slider {
+    display: flex;
+    transition: transform 1s ease-in-out;
 }
 
-.nav-top, .nav-bottom {
-  padding: 20px;
+.slide {
+    min-width: 100%;
+    transition: opacity 1s ease;
+    box-sizing: border-box;
 }
 
-.logo {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  color: #ffffff;
+img {
+    width: 100%;
+    height: 100%; /* Asegura que las imágenes tengan la misma altura */
+    object-fit: cover; /* Ajusta la imagen para que cubra todo el espacio sin deformarse */
+    display: block;
 }
 
-.logo svg {
-  margin-right: 10px;
+.prev, .next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 18px;
 }
 
-/* Estilos del menú lateral */
-.nav-bottom ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.prev {
+    left: 10px;
 }
 
-.nav-bottom li {
-  margin-bottom: 10px;
+.next {
+    right: 10px;
 }
 
-.nav-item {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  color: #ecf0f1;
-  padding: 10px;
-  border-radius: 5px;
-}
-
-.nav-item i, .nav-item svg {
-  margin-right: 10px; /* Espacio entre ícono y texto */
-}
-
-.nav-item:hover {
-  background-color: #34495e;
-}
-
-/* Contenido principal que se alinea al lado derecho del Sidebar */
-.main-content {
-  flex-grow: 1;
-  margin-left: 250px; /* Espacio reservado para el sidebar */
-  padding: 20px;
-  background-color: #f4f4f4;
-  min-height: 100vh;
-  box-sizing: border-box;
-}
-
-/* Otros estilos generales */
-.header {
-  background-color: #34495e;
-  color: white;
-  padding: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.grid-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
-}
-
-.card {
-  background-color: white;
-  padding: 20px;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.card-content p {
-  text-align: center;
-}
-
-.card-content h3 {
-  margin-top: 0;
-  text-align: center;
-}
-
-.card-footer {
-  margin-top: 20px;
-}
-
-.btn {
-  background-color: #3498db;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-}
-
-.btn:hover {
-  background-color: #2980b9;
-}
-
-.icono {
-  width: 50px;
-  height: 50px;
-  display: block;
-  margin: auto;
-}
-
-.progress-bar {
-  background-color: #bdc3c7;
-  border-radius: 5px;
-  overflow: hidden;
-  height: 10px;
-  margin-top: 10px;
-}
-
-.progress {
-  width: 25%;
-  height: 100%;
-  background-color: #2ecc71;
-}
-
-/* Responsivo */
-@media (min-width: 600px) {
-  .hidden-sm {
-    display: table-cell;
-  }
-}
-
-@media (min-width: 900px) {
-  .hidden-md {
-    display: table-cell;
-  }
+.prev:hover, .next:hover {
+    background-color: rgba(0, 0, 0, 0.8);
 }

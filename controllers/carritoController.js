@@ -14,7 +14,7 @@ exports.agregarAlCarrito = (req, res) => {
                 req.session.carrito = [];
             }
             req.session.carrito.push({ producto_id, nombre: nombreProducto, cantidad: parseInt(cantidad, 10) });
-            res.redirect('/carrito');
+            res.redirect('/productos/carrito');
         });
     });
 };
@@ -57,7 +57,7 @@ exports.finalizarCompra = (req, res) => {
         Promise.all(promises)
             .then(() => {
                 req.session.carrito = [];
-                res.redirect('/comprar'); // Redirige a la vista de compras después de la compra exitosa
+                res.redirect('/productos/comprar');
             })
             .catch(error => {
                 res.status(500).send(error);

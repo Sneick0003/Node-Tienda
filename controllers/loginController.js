@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
-
 // Renderizar el formulario de login y registro
 exports.renderLogin = (req, res) => {
     res.render('Login/login', { 
@@ -17,41 +16,41 @@ exports.renderLogin = (req, res) => {
 // Procesar el registro de usuario
 exports.register = (req, res) => {
     const { nombre, email, contra } = req.body;
-  
+
     req.getConnection((err, connection) => {
-      if (err) throw err;
-  
-      const checkUserQuery = 'SELECT * FROM login WHERE email = ?';
-      connection.query(checkUserQuery, [email], (err, results) => {
         if (err) throw err;
-  
-        if (results.length > 0) {
-          req.session.message = 'El correo electrónico ya está registrado';
-          req.session.messageType = 'register';
-          res.redirect('/login');
-        } else {
-          // Encriptar la contraseña antes de guardarla en la base de datos
-          bcrypt.genSalt(10, (err, salt) => {
+
+        const checkUserQuery = 'SELECT * FROM login WHERE email = ?';
+        connection.query(checkUserQuery, [email], (err, results) => {
             if (err) throw err;
-  
-            bcrypt.hash(contra, salt, (err, hash) => {
-              if (err) throw err;
-  
-              const insertUserQuery = 'INSERT INTO login (nombre, email, contra) VALUES (?, ?, ?)';
-              connection.query(insertUserQuery, [nombre, email, hash], (err, results) => {
-                if (err) throw err;
-  
-                req.session.message = 'Registro exitoso, por favor inicie sesión';
+
+            if (results.length > 0) {
+                req.session.message = 'El correo electrónico ya está registrado';
                 req.session.messageType = 'register';
-                res.redirect('/login');
-              });
-            });
-          });
-        }
-      });
+                res.redirect('/inicio/login');
+            } else {
+                // Encriptar la contraseña antes de guardarla en la base de datos
+                bcrypt.genSalt(10, (err, salt) => {
+                    if (err) throw err;
+
+                    bcrypt.hash(contra, salt, (err, hash) => {
+                        if (err) throw err;
+
+                        const insertUserQuery = 'INSERT INTO login (nombre, email, contra) VALUES (?, ?, ?)';
+                        connection.query(insertUserQuery, [nombre, email, hash], (err, results) => {
+                            if (err) throw err;
+
+                            req.session.message = 'Registro exitoso, por favor inicie sesión';
+                            req.session.messageType = 'register';
+                            res.redirect('/inicio/login');
+                        });
+                    });
+                });
+            }
+        });
     });
-  };
-  
+};
+
 // Procesar el inicio de sesión
 exports.login = async (req, res) => {
     const { email, contra } = req.body;
@@ -61,7 +60,7 @@ exports.login = async (req, res) => {
             if (err) {
                 req.session.message = 'Error de conexión.';
                 req.session.messageType = 'login';
-                return res.redirect('/login');
+                return res.redirect('/inicio/login');
             }
 
             // Consultar el usuario por correo
@@ -69,13 +68,13 @@ exports.login = async (req, res) => {
                 if (err) {
                     req.session.message = 'Error en la consulta.';
                     req.session.messageType = 'login';
-                    return res.redirect('/login');
+                    return res.redirect('/inicio/login');
                 }
 
                 if (results.length === 0) {
                     req.session.message = 'Credenciales incorrectas.';
                     req.session.messageType = 'login';
-                    return res.redirect('/login');
+                    return res.redirect('/inicio/login');
                 }
 
                 const user = results[0];
@@ -84,7 +83,7 @@ exports.login = async (req, res) => {
                 if (!match) {
                     req.session.message = 'Credenciales incorrectas.';
                     req.session.messageType = 'login';
-                    return res.redirect('/login');
+                    return res.redirect('/inicio/login');
                 }
 
                 // Obtener roles del usuario
@@ -97,7 +96,7 @@ exports.login = async (req, res) => {
                     if (err) {
                         req.session.message = 'Error al obtener roles.';
                         req.session.messageType = 'login';
-                        return res.redirect('/login');
+                        return res.redirect('/inicio/login');
                     }
 
                     const roles = results.map(row => row.rol_nombre);
@@ -117,7 +116,7 @@ exports.login = async (req, res) => {
     } catch (error) {
         req.session.message = 'Error al iniciar sesión.';
         req.session.messageType = 'login';
-        res.redirect('/login');
+        res.redirect('/inicio/login');
     }
 };
 
@@ -126,6 +125,6 @@ exports.logout = (req, res) => {
     req.session.destroy((err) => {
         if (err) throw err;
         // Redirigir al formulario de login después de cerrar sesión
-        res.redirect('/');
+        res.redirect('/inicio/login');
     });
 };

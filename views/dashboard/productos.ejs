@@ -21,7 +21,7 @@
       <button id="toggleFormBtn" class="btn btn-primary mb-4">Agregar Producto</button>
 
       <!-- Formulario para agregar un nuevo producto -->
-      <form id="addProductForm" action="/productos/add" method="POST" class="mb-4" style="display: none;">
+      <form id="addProductForm" action="/almacen/productos/add" method="POST" class="mb-4" style="display: none;">
         <h2>Agregar Producto</h2>
         <div class="form-row">
           <div class="form-group col-md-6">
@@ -64,7 +64,7 @@
               <td><%= producto.cantidad_en_almacen %></td>
               <td>
                 <!-- Enlace para eliminar un producto -->
-                <a href="/productos/delete/<%= producto.id %>"  class="btn btn-danger btn-sm delete-button" data-id="<%= producto.id %>">Eliminar</a>
+                <a href="/almacen/productos/delete/<%= producto.id %>"  class="btn btn-danger btn-sm delete-button" data-id="<%= producto.id %>">Eliminar</a>
                 <!-- Botón para editar un producto -->
                 <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editModal<%= producto.id %>">
                   Editar
@@ -82,14 +82,14 @@
     <div class="modal fade" id="editModal<%= producto.id %>" tabindex="-1" role="dialog" aria-labelledby="editModalLabel<%= producto.id %>" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header"> 
             <h5 class="modal-title" id="editModalLabel<%= producto.id %>">Editar Producto</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            <form class="edit-form" action="/productos/edit/<%= producto.id %>" method="POST">
+            <form class="edit-form" action="/almacen/productos/edit/<%= producto.id %>" method="POST">
               <div class="form-group">
                 <label for="nombre">Nombre</label>
                 <input type="text" name="nombre" class="form-control" value="<%= producto.nombre %>" required>

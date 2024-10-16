@@ -28,9 +28,9 @@
                     <h2><%= producto.nombre %></h2>
                     <p><%= producto.descripcion %></p>
                     <p>Precio: $<%= producto.precio.toFixed(2) %></p>
-                    <form action="/carrito/agregar" method="post">
+                    <form action="/productos/carrito/agregar" method="post">
                         <input type="hidden" name="producto_id" value="<%= producto.id %>">
-                        <input type="number" name="cantidad" min="1" max="<%= producto.cantidad_en_almacen %>" value="1">
+                        <input type="number" name="cantidad" min="0" max="<%= producto.cantidad_en_almacen %>" value="1">
                         <button type="submit" class="btn-add-cart">Agregar al Carrito</button>
                     </form>
                 </div>

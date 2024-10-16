@@ -6,7 +6,7 @@ const isAuthenticated = (req, res, next) => {
         }
         return next(); // El usuario está autenticado y autorizado
     }
-    res.redirect('/login'); // Redirigir al login si el usuario no está autenticado
+    res.redirect('/inicio/login'); // Redirigir al login si el usuario no está autenticado
 };
 
 module.exports = { isAuthenticated };

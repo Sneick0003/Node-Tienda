@@ -25,7 +25,7 @@ controller.crear = (req, res) => {
                 console.error('Error al crear un producto:', error);
                 res.json(error);
             } else {
-                res.redirect("/productos");
+                res.redirect("/almacen/productos");
             }
         });
     });
@@ -42,7 +42,7 @@ controller.editar = (req, res) => {
                 console.error('Error al editar un producto:', error);
                 res.json(error);
             } else {
-                res.redirect("/productos");
+                res.redirect("/almacen/productos");
             }
         });
     });
@@ -58,7 +58,7 @@ controller.eliminar = (req, res) => {
                 console.error('Error al eliminar un producto:', error);
                 res.json(error);
             } else {
-                res.redirect("/productos");
+                res.redirect("/almacen/productos");
             }
         });
     });

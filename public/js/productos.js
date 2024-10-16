@@ -19,7 +19,7 @@ $(document).ready(function() {
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: '/productos/delete/' + productoId,
+          url: '/almacen/productos/delete/' + productoId,
           method: 'DELETE',
           success: function(response) {
             Swal.fire(
@@ -51,7 +51,7 @@ $(document).ready(function() {
     const formData = form.serialize();
 
     $.ajax({
-      url: '/productos/edit/' + productoId,
+      url: '/almacen/productos/edit/' + productoId,
       method: 'POST',
       data: formData,
       success: function(response) {
@@ -80,7 +80,7 @@ $(document).ready(function() {
     const formData = $(this).serialize();
 
     $.ajax({
-      url: '/productos/add',
+      url: '/almacen/productos/add',
       method: 'POST',
       data: formData,
       success: function(response) {
