@@ -3,65 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Slider</title>
-    <link rel="stylesheet" href="css/home.css">
+    <title>Panaderia Sin Nombre</title>
+    <link rel="stylesheet" href="/css/home.css">
 </head>
 <body>
-    <%- include('./partials/header.ejs') %>
+    <div class="container">
+        <%- include('./partials/header.ejs') %>
 
-    <div class="slider-container">
-        <div class="slider">
-            <div class="slide">
-                <img src="/img/1.jpg" alt="Image 1">
+        <div class="main-content">
+            <div class="header">
+                <h1>Panadería Sin Nombre</h1>
             </div>
-            <div class="slide">
-                <img src="/img/2.jpg" alt="Image 2">
+            <div class="content">
+                <!-- Contenido principal: texto y imágenes -->
+                <section class="about">
+                    <h2 style="color: #ffffff;">Bienvenidos a nuestra panadería</h2>
+                    <p style="color: #ffffff;">
+                        En <strong>Panadería Sin Nombre</strong>, ofrecemos una selección de los mejores productos horneados
+                        con ingredientes frescos y de la más alta calidad. Nuestros panes y pasteles son perfectos para cualquier ocasión.
+                    </p>
+                </section>
+                <section class="products">
+                    <h3>Nuestros Productos</h3>
+                    <div class="product-grid">
+                        <!-- Primera imagen -->
+                        <div class="product-item">
+                            <img src="/img/1.jpg" alt="Pan tradicional">
+                            <h4>Pan Tradicional</h4>
+                            <p>Un clásico que nunca falla, hecho con receta artesanal.</p>
+                        </div>
+                        <!-- Segunda imagen -->
+                        <div class="product-item">
+                            <img src="/img/2.jpg" alt="Pastel de Chocolate">
+                            <h4>Pastel de Chocolate</h4>
+                            <p>Delicioso pastel de chocolate, perfecto para celebraciones.</p>
+                        </div>
+                        <!-- Tercera imagen -->
+                        <div class="product-item">
+                            <img src="/img/3.jpg" alt="Pan Dulce">
+                            <h4>Pan Dulce</h4>
+                            <p>Ideal para acompañar tu café o té, con un toque de dulzura.</p>
+                        </div>
+                    </div>
+                </section>
             </div>
-            <div class="slide">
-                <img src="/img/3.jpg" alt="Image 3">
-            </div>
-            <div class="slide">
-                <img src="/img/4.jpg" alt="Image 4">
+            <div class="bottom-section">
+                <h3>Z50 STEREO SPEAKERS</h3>
+                <div class="slider"></div>
             </div>
         </div>
-        <button class="prev" onclick="moveSlide(-1)">&#10094;</button>
-        <button class="next" onclick="moveSlide(1)">&#10095;</button>
+        <div class="right-sidebar">
+            <div class="right-top">
+                <h3>Sobre Nosotros</h3>
+                <div class="bottom-section">
+                    <div class="slider-2">
+                        <img src="/img/1.jpg" alt="Image 1">
+                        <img src="/img/2.jpg" alt="Image 2">
+                        <img src="/img/3.jpg" alt="Image 3">
+                    </div>
+                </div>
+            </div>
+            <div class="right-bottom">
+                <h3>EASY CONTROLS</h3>
+                <!-- Additional controls can be added here -->
+            </div>
+        </div>
     </div>
 
     <script>
-        let currentSlide = 0;
-        const totalSlides = document.querySelectorAll('.slide').length;
-        const slider = document.querySelector('.slider');
+     const images = document.querySelectorAll('.slider-2 img');
+let currentIndex = 0;
 
-        // Función para mover el slider manualmente
-        function moveSlide(step) {
-            currentSlide += step;
+function showNextImage() {
+    // Oculta la imagen actual
+    images[currentIndex].classList.add('hidden');
 
-            if (currentSlide >= totalSlides) {
-                currentSlide = 0;
-            } else if (currentSlide < 0) {
-                currentSlide = totalSlides - 1;
-            }
+    // Actualiza el índice para la siguiente imagen
+    currentIndex = (currentIndex + 1) % images.length;
 
-            updateSlide();
-        }
+    // Muestra la nueva imagen
+    images[currentIndex].classList.remove('hidden');
+}
 
-        // Función para actualizar la imagen
-        function updateSlide() {
-            slider.style.transform = `translateX(-${currentSlide * 100}%)`;
-        }
+// Cambiar de imagen cada 3 segundos
+setInterval(showNextImage, 3000);
 
-        // Función para cambiar la imagen automáticamente
-        function autoSlide() {
-            currentSlide++;
-            if (currentSlide >= totalSlides) {
-                currentSlide = 0;
-            }
-            updateSlide();
-        }
-
-        // Cambia de imagen cada 5 segundos (5000 ms)
-        setInterval(autoSlide, 5000);
-    </script>
+        </script>
 </body>
 </html>

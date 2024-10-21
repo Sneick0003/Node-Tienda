@@ -1,128 +1,141 @@
-.container {
-    display: flex;
-    min-height: 100vh;
+
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  height: 100%;
+}
+/* Contenedor Flex para Sidebar y Contenido */
+.flex-container {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+/* Sidebar fijo a la izquierda */
+.sidebar {
+  width: 250px;
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 1000;
+}
+.nav-top, .nav-bottom {
+  padding: 20px;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #ffffff;
+}
+.logo svg {
+  margin-right: 10px;
+}
+/* Estilos del menú lateral */
+.nav-bottom ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.nav-bottom li {
+  margin-bottom: 10px;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #ecf0f1;
+  padding: 10px;
+  border-radius: 5px;
+}
+.nav-item i, .nav-item svg {
+  margin-right: 10px; /* Espacio entre ícono y texto */
+}
+.nav-item:hover {
+  background-color: #34495e;
+}
+/* Contenido principal que se alinea al lado derecho del Sidebar */
+.main-content {
+  flex-grow: 1;
+  margin-left: 250px; /* Espacio reservado para el sidebar */
+  padding: 20px;
+  background-color: #f4f4f4;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+/* Otros estilos generales */
+.header {
+  background-color: #34495e;
+  color: white;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+.card {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.card-content p {
+  text-align: center;
+}
+.card-content h3 {
+  margin-top: 0;
+  text-align: center;
+}
+.card-footer {
+  margin-top: 20px;
+}
+.btn {
+  background-color: #3498db;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.btn:hover {
+  background-color: #2980b9;
+}
+.icono {
+  width: 50px;
+  height: 50px;
+  display: block;
+  margin: auto;
+}
+.progress-bar {
+  background-color: #bdc3c7;
+  border-radius: 5px;
+  overflow: hidden;
+  height: 10px;
+  margin-top: 10px;
+}
+.progress {
+  width: 25%;
+  height: 100%;
+  background-color: #2ecc71;
+}
+/* Responsivo */
+@media (min-width: 600px) {
+  .hidden-sm {
+    display: table-cell;
   }
-  
-  .sidebar {
-    position: fixed;
-    inset: 0;
-    left: 0;
-    z-index: 10;
-    width: 3.5rem;
-    flex-direction: column;
-    border-right: 1px solid var(--border-color);
-    background-color: var(--background-color);
+}
+@media (min-width: 900px) {
+  .hidden-md {
+    display: table-cell;
   }
-  
-  .nav-top, .nav-bottom {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 1.25rem;
-  }
-  
-  .logo {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 2rem;
-    width: 2rem;
-    background-color: var(--primary-color);
-    color: var(--primary-foreground);
-    border-radius: 50%;
-  }
-  
-  .icon {
-    height: 1rem;
-    width: 1rem;
-  }
-  
-  .content {
-    display: flex;
-    flex-direction: column;
-    margin-left: 3.5rem;
-    padding: 1rem;
-  }
-  
-  .header {
-    position: sticky;
-    top: 0;
-    z-index: 30;
-    display: flex;
-    align-items: center;
-    height: 3.5rem;
-    border-bottom: 1px solid var(--border-color);
-    background-color: var(--background-color);
-  }
-  
-  .search-container {
-    position: relative;
-    margin-left: auto;
-  }
-  
-  .search-icon {
-    position: absolute;
-    left: 0.625rem;
-    top: 0.625rem;
-    height: 1rem;
-    width: 1rem;
-    color: var(--muted-foreground);
-  }
-  
-  .search-input {
-    width: 100%;
-    padding-left: 2rem;
-    border: 1px solid var(--input-border-color);
-    border-radius: 0.5rem;
-    height: 2.5rem;
-  }
-  
-  .main-content {
-    display: grid;
-    gap: 1rem;
-    padding: 1rem;
-  }
-  
-  .orders {
-    display: grid;
-    gap: 1rem;
-  }
-  
-  .order-card {
-    border: 1px solid var(--border-color);
-    border-radius: 0.5rem;
-    background-color: var(--card-background);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  }
-  
-  .order-header {
-    padding: 1.5rem;
-  }
-  
-  .order-header h3 {
-    font-size: 1.5rem;
-    font-weight: 600;
-  }
-  
-  .order-header p {
-    font-size: 0.875rem;
-    color: var(--muted-foreground);
-  }
-  
-  .order-actions {
-    padding: 1.5rem;
-  }
-  
-  .order-button {
-    padding: 0.5rem 1rem;
-    background-color: var(--primary-color);
-    color: var(--primary-foreground);
-    border-radius: 0.25rem;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .order-button:hover {
-    background-color: var(--primary-hover-color);
-  }
-  
+}
