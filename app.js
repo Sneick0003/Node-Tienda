@@ -30,7 +30,7 @@ app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
-  cookie: { maxAge: 600000 } // Configura según tus necesidades
+  cookie: { maxAge: 3600000 } // Configura según tus necesidades
 }));
 
 // Middleware para parsear formularios

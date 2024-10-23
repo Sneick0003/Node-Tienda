@@ -30,7 +30,7 @@ exports.register = (req, res) => {
                 res.redirect('/inicio/login');
             } else {
                 // Encriptar la contraseña antes de guardarla en la base de datos
-                bcrypt.genSalt(10, (err, salt) => {
+                bcrypt.genSalt(saltRounds, (err, salt) => {
                     if (err) throw err;
 
                     bcrypt.hash(contra, salt, (err, hash) => {
@@ -40,9 +40,19 @@ exports.register = (req, res) => {
                         connection.query(insertUserQuery, [nombre, email, hash], (err, results) => {
                             if (err) throw err;
 
-                            req.session.message = 'Registro exitoso, por favor inicie sesión';
-                            req.session.messageType = 'register';
-                            res.redirect('/inicio/login');
+                            // Obtener el ID del nuevo usuario
+                            const newUserId = results.insertId;
+
+                            // Asignar automáticamente el rol de "Comprador"
+                            const rolCompradorId = 2; // Asegúrate de que este ID corresponde al de "Comprador" en tu base de datos
+                            const assignRoleQuery = 'INSERT INTO usuario_roles (usuario_id, rol_id) VALUES (?, ?)';
+                            connection.query(assignRoleQuery, [newUserId, rolCompradorId], (err, results) => {
+                                if (err) throw err;
+
+                                req.session.message = 'Registro exitoso, por favor inicie sesión';
+                                req.session.messageType = 'register';
+                                res.redirect('/inicio/login');
+                            });
                         });
                     });
                 });
@@ -86,6 +96,9 @@ exports.login = async (req, res) => {
                     return res.redirect('/inicio/login');
                 }
 
+                // Guardar el ID del usuario en la sesión
+                req.session.usuarioId = user.id;
+
                 // Obtener roles del usuario
                 conn.query(`
                     SELECT roles.rol_nombre 
@@ -104,10 +117,8 @@ exports.login = async (req, res) => {
 
                     // Redirigir según el rol
                     if (roles.includes('Admin')) {
-                        // Redirigir a la vista del home si el usuario tiene rol de administrador
                         return res.redirect('/home');
                     } else {
-                        // Redirigir a la vista de inicio si el usuario tiene otro rol
                         return res.redirect('/');
                     }
                 });
@@ -124,7 +135,6 @@ exports.login = async (req, res) => {
 exports.logout = (req, res) => {
     req.session.destroy((err) => {
         if (err) throw err;
-        // Redirigir al formulario de login después de cerrar sesión
         res.redirect('/inicio/login');
     });
 };

@@ -2,17 +2,6 @@ DROP DATABASE IF EXISTS alumnos_ejs;
 CREATE DATABASE alumnos_ejs;
 USE alumnos_ejs;
 
-
-CREATE TABLE alumnos (
-    id                  VARCHAR(15) PRIMARY KEY,
-    nombre              VARCHAR(50),
-    apellidoPaterno     VARCHAR(50),
-    apellidoMaterno     VARCHAR(50),
-    calificacion1       DECIMAL(5,2),
-    calificacion2       DECIMAL(5,2),
-    calificacion3       DECIMAL(5,2)
-);
-
 CREATE TABLE login (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
@@ -92,21 +81,6 @@ VALUES
     (1, 3), -- Admin puede Actualizar
     (1, 4); -- Admin puede Eliminar
 
-INSERT INTO alumnos (id, nombre, apellidoPaterno, apellidoMaterno, calificacion1, calificacion2, calificacion3)
-VALUES
-    ('57231900108', 'Ingrid Lizbeth', 'Garcia', 'Garcia', 8.00, 8.00, 8.00),
-    ('57231900157', 'Carlos Arturo', 'Guiterez', 'Tlatempa', 9.00, 9.00, 9.00),
-    ('57231900109', 'Pablo Armando', 'Izoteco', 'Salgado', 9.00, 10.00, 10.00),
-    ('57231900110', 'Marco Antonio', 'Jimenez', 'Tenorio', 10.00, 10.00, 10.00), 
-    ('57231900111', 'Antonio Miguel', 'Marinez', 'Martinez', 10.00, 8.00, 8.00),
-    ('57231900112', 'Rogelio', 'Nava', 'Garcia', 9.00, 9.00, 9.00),
-    ('57231900113', 'Fernado Angel', 'Rendon', 'Tenorio', 10.00, 10.00, 10.00),
-    ('57231900158', 'Andres', 'Rita', 'Rita', 8.00, 8.00, 8.00),
-    ('57231900114', 'Edgar A  Alexis', 'Rojas', 'Mateos', 7.00, 7.00, 7.00),
-    ('57231900115', 'Eduardo Alejandro', 'Rojas', 'Morales', 9.00, 9.00, 9.00),
-    ('57231900116', 'Ederlin', 'Ruiz', 'Angeles', 9.00, 9.00, 9.00),
-    ('57231212121', 'Juana', 'Diaz', 'Sanchez', 9.00, 9.00, 9.00);
-
 
 INSERT INTO productos (nombre, descripcion, precio, cantidad_en_almacen, cantidad_vendida)
 VALUES 
@@ -121,5 +95,6 @@ UPDATE login
 SET contra = '$2b$10$tLzK5knW8ftXV7rB3k5OHevze2VDNquQEmSfMeqzQnW38eIGCLbV2' 
 WHERE email = 'example@gmail.com';
 
-INSERT INTO compras (producto_id, cantidad)
-VALUES (LAST_INSERT_ID(), 5);
+-- Asegúrate de insertar el usuario_id en la tabla compras
+INSERT INTO compras (producto_id, usuario_id, cantidad)
+VALUES (1, 1, 5);

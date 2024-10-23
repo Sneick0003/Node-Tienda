@@ -7,8 +7,6 @@
 </head>
 <body>
     <%- include('../partials/header.ejs') %>
-
-
     <h1>Tu Carrito</h1>
     <% if (carrito.length > 0) { %>
         <% carrito.forEach(function(item) { %>
@@ -24,9 +22,6 @@
     <% } else { %>
         <p>No hay productos en tu carrito.</p>
     <% } %>
-
-    <!-- <%- include('../partials/footer.ejs') %> -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 </body>
 </html>

@@ -14,7 +14,7 @@ exports.mostrarCompras = (req, res) => {
             FROM compras c
             JOIN productos p ON c.producto_id = p.id
             JOIN login l ON c.usuario_id = l.id
-            GROUP BY l.id
+            GROUP BY l.id, l.nombre
             ORDER BY l.nombre;
         `;
 
@@ -27,4 +27,3 @@ exports.mostrarCompras = (req, res) => {
         });
     });
 };
- 
