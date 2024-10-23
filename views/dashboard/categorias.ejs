@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Categorías</title>
+  <link rel="stylesheet" href="/css/dash.css">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- DataTables CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+</head>
+<body>
+
+  <div class="page-wrapper">
+    <%- include('../partials/sidebar.ejs') %> <!-- Incluye la barra lateral -->
+
+    <div class="main-content">
+      <h1 class="my-4">Lista de Categorías</h1>
+
+      <!-- Botón para mostrar el formulario -->
+      <button id="toggleFormBtn" class="btn btn-primary mb-4">Agregar Categoría</button>
+
+      <!-- Formulario para agregar una nueva categoría -->
+      <form id="addCategoryForm" action="/dashboard/categorias/crear" method="POST" class="mb-4" style="display: none;">
+        <h2>Agregar Categoría</h2>
+        <div class="form-group">
+          <label for="nombre">Nombre:</label>
+          <input type="text" name="nombre" class="form-control" placeholder="Nombre" required>
+        </div>
+        <div class="form-group">
+          <label for="descripcion">Descripción:</label>
+          <textarea name="descripcion" class="form-control" placeholder="Descripción" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Agregar</button>
+      </form>
+
+      <!-- Tabla de categorías -->
+      <table id="categoriasTable" class="display table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% categorias.forEach(function(categoria) { %>
+            <tr>
+              <td><%= categoria.id %></td>
+              <td><%= categoria.nombre %></td>
+              <td><%= categoria.descripcion %></td>
+              <td>
+                <a href="/dashboard/categorias/editar/<%= categoria.id %>" class="btn btn-warning btn-sm">Editar</a>
+                <a href="/dashboard/categorias/eliminar/<%= categoria.id %>" class="btn btn-danger btn-sm delete-button">Eliminar</a>
+              </td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- DataTables JS -->
+  <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script>
+    $(document).ready(function() {
+      $('#categoriasTable').DataTable();
+      $('#toggleFormBtn').click(function() {
+        $('#addCategoryForm').toggle();
+      });
+      $('.delete-button').click(function(event) {
+        event.preventDefault();
+        const url = $(this).attr('href');
+        Swal.fire({
+          title: '¿Estás seguro?',
+          text: "¡No podrás revertir esto!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Sí, eliminarlo!'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = url;
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

@@ -49,6 +49,7 @@ app.use('/productos', require('./routes/producto'));// ruta para comprar product
 app.use('/home', isAuthenticated, require('./routes/home')); // Ruta para después de iniciar sesión (protegida)
 app.use('/almacen', isAuthenticated, require('./routes/producto.router')); // Ruta del CRUD de productos (protegida)
 app.use('/compras', isAuthenticated, require('./routes/compras'));// ruta para ver las compras
+app.use('/lista', isAuthenticated, require('./routes/categoria.Router'));// ruta para ver las categorias
 
 
 
