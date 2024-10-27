@@ -28,14 +28,12 @@ html {
 .header {
     height: 48px;
     background-color: #D7CCC8;
-    /* Café Suave para la barra superior */
     border-radius: 16px 16px 0 0;
     margin-bottom: 16px;
     display: flex;
     align-items: center;
     padding: 0 16px;
     color: #8D6E63;
-    /* Marrón Chocolate para el texto */
 }
 
 .header-notch {

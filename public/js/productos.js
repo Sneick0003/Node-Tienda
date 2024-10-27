@@ -1,13 +1,11 @@
 $(document).ready(function() {
+  // Initialize DataTables
   $('#productosTable').DataTable();
 
-  // Manejar la eliminación de productos
+  // Handle delete product
   $('.delete-button').on('click', function(e) {
-    e.preventDefault(); // Evitar el comportamiento por defecto del enlace
-    const productoId = $(this).data('id');
-    
-    console.log('ID del producto a eliminar:', productoId); // Para depurar
-
+    e.preventDefault();
+    const productId = $(this).data('id');
     Swal.fire({
       title: '¿Estás seguro?',
       text: "No podrás revertir esto.",
@@ -19,7 +17,7 @@ $(document).ready(function() {
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: '/almacen/productos/delete/' + productoId,
+          url: '/almacen/productos/delete/' + productId, // Adjust this URL based on your routing setup
           method: 'DELETE',
           success: function(response) {
             Swal.fire(
@@ -31,7 +29,6 @@ $(document).ready(function() {
             });
           },
           error: function(err) {
-            console.error('Error al eliminar:', err); // Para depurar
             Swal.fire(
               'Error!',
               'No se pudo eliminar el producto.',
@@ -43,28 +40,27 @@ $(document).ready(function() {
     });
   });
 
-  // Manejar la edición de productos
-  $('.edit-form').on('submit', function(e) {
+  // Handle edit product
+  $(document).on('submit', 'form[id^="editForm"]', function(e) {
     e.preventDefault();
     const form = $(this);
-    const productoId = form.attr('action').split('/').pop();
+    const productId = form.attr('action').split('/').pop();
     const formData = form.serialize();
 
     $.ajax({
-      url: '/almacen/productos/edit/' + productoId,
+      url: '/almacen/productos/edit/' + productId, // Adjust this URL based on your routing setup
       method: 'POST',
       data: formData,
       success: function(response) {
         Swal.fire(
           'Actualizado!',
-          'El producto ha sido actualizado.',
+          'El producto ha sido actualizado correctamente.',
           'success'
         ).then(() => {
           location.reload();
         });
       },
       error: function(err) {
-        console.error('Error al actualizar:', err); // Para depurar
         Swal.fire(
           'Error!',
           'No se pudo actualizar el producto.',
@@ -74,26 +70,25 @@ $(document).ready(function() {
     });
   });
 
-  // Manejar la creación de nuevos productos
-  $('#addProductForm').on('submit', function(e) {
+  // Handle new product form submission
+  $('#newProductForm').on('submit', function(e) {
     e.preventDefault();
     const formData = $(this).serialize();
 
     $.ajax({
-      url: '/almacen/productos/add',
+      url: '/almacen/productos/add', // Adjust this URL based on your routing setup
       method: 'POST',
       data: formData,
       success: function(response) {
         Swal.fire(
-          'Creado!',
-          'El producto ha sido agregado.',
+          'Producto Agregado!',
+          'El nuevo producto ha sido agregado exitosamente.',
           'success'
         ).then(() => {
-          location.reload();
+          location.reload(); // Reload the page to update the product list
         });
       },
       error: function(err) {
-        console.error('Error al agregar:', err); // Para depurar
         Swal.fire(
           'Error!',
           'No se pudo agregar el producto.',
@@ -102,16 +97,15 @@ $(document).ready(function() {
       }
     });
   });
-});
 
-// JavaScript para mostrar/ocultar el formulario de creación de productos
-document.getElementById('toggleFormBtn').addEventListener('click', function() {
-  var form = document.getElementById('addProductForm');
-  if (form.style.display === 'none' || form.style.display === '') {
-    form.style.display = 'block';
-    this.textContent = 'Cancelar'; // Cambia el texto del botón
-  } else {
-    form.style.display = 'none';
-    this.textContent = 'Agregar Producto'; // Restaura el texto del botón
-  }
+  // Toggle the add product form
+  $('#toggleFormBtn').click(function() {
+    $('#addProductForm').toggle('slow', function() {
+      if ($('#addProductForm').is(':visible')) {
+        $('#toggleFormBtn').text('Cancelar');
+      } else {
+        $('#toggleFormBtn').text('Agregar Producto');
+      }
+    });
+  });
 });

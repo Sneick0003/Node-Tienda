@@ -5,102 +5,151 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Productos</title>
   <link rel="stylesheet" href="/css/dash.css">
-  <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <!-- DataTables CSS -->
   <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
 </head>
 <body>
 
-  <div class="page-wrapper">
-    <%- include('../partials/sidebar.ejs') %>
+<div class="page-wrapper">
+  <%- include('../partials/sidebar.ejs') %>
 
-    <div class="main-content">
-      <h1 class="my-4">Lista de Productos</h1>
+  <div class="main-content">
+    <h1 class="my-4">Lista de Productos</h1>
 
-      <!-- Botón para mostrar el formulario -->
-      <button id="toggleFormBtn" class="btn btn-primary mb-4">Agregar Producto</button>
+    <!-- Botón para mostrar/ocultar el formulario de agregar producto -->
+    <button id="toggleFormBtn" class="btn btn-primary mb-4">Agregar Producto</button>
 
-      <!-- Formulario para agregar un nuevo producto -->
-      <form id="addProductForm" action="/almacen/productos/add" method="POST" class="mb-4" style="display: none;">
-        <h2>Agregar Producto</h2>
+    <!-- Formulario para agregar un nuevo producto -->
+    <div id="addProductForm" style="display: none;">
+      <h2>Agregar Producto</h2>
+      <form id="newProductForm" action="/productos/add" method="post" enctype="multipart/form-data">
         <div class="form-row">
           <div class="form-group col-md-6">
-            <input type="text" name="nombre" class="form-control" placeholder="Nombre" required>
+            <label>Nombre</label>
+            <input type="text" name="nombre" class="form-control" placeholder="Nombre del Producto" required>
           </div>
           <div class="form-group col-md-6">
+            <label>Descripción</label>
             <input type="text" name="descripcion" class="form-control" placeholder="Descripción" required>
           </div>
           <div class="form-group col-md-6">
+            <label>Precio</label>
             <input type="number" name="precio" class="form-control" placeholder="Precio" required>
           </div>
           <div class="form-group col-md-6">
+            <label>Cantidad en Almacén</label>
             <input type="number" name="cantidad_en_almacen" class="form-control" placeholder="Cantidad en Almacén" required>
           </div>
-          <div class="form-group col-md-12">
+          <div class="form-group col-md-6">
+            <label>Imagen del Producto</label>
+            <input type="file" class="form-control-file" name="imagen">
+          </div>
+          <div class="form-group col-md-6">
             <label for="categoria_id">Categoría</label>
             <select class="form-control" id="categoria_id" name="categoria_id" required>
-              <% if (categorias) { %>
-                <% categorias.forEach(categoria => { %>
-                  <option value="<%= categoria.id %>"><%= categoria.nombre %></option>
-                <% }); %>
-              <% } %>
+              <% categorias.forEach(categoria => { %>
+                <option value="<%= categoria.id %>"><%= categoria.nombre %></option>
+              <% }); %>
             </select>
           </div>
         </div>
-        <button type="submit" class="btn btn-primary">Agregar</button>
+        <button type="submit" class="btn btn-success">Agregar</button>
       </form>
-
-      <!-- Tabla de productos -->
-      <table id="productosTable" class="display table table-striped table-bordered">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Descripción</th>
-            <th>Precio</th>
-            <th>Cantidad en Almacén</th>
-            <th>Categoría</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% if (productos && productos.length > 0) { %>
-            <% productos.forEach(function(producto) { %>
-              <tr>
-                <td><%= producto.id %></td>
-                <td><%= producto.nombre %></td>
-                <td><%= producto.descripcion %></td>
-                <td><%= producto.precio %></td>
-                <td><%= producto.cantidad_en_almacen %></td>
-                <td><%= producto.categoria_nombre %></td>
-                <td>
-                  <a href="/almacen/productos/delete/<%= producto.id %>" class="btn btn-danger btn-sm delete-button" data-id="<%= producto.id %>">Eliminar</a>
-                  <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editModal<%= producto.id %>">
-                    Editar
-                  </button>
-                </td>
-              </tr>
-            <% }); %>
-          <% } else { %>
-            <tr>
-              <td colspan="7">No hay productos disponibles.</td>
-            </tr>
-          <% } %>
-        </tbody>
-      </table>
     </div>
-  </div>
 
-  <!-- jQuery -->
-  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- DataTables JS -->
-  <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-  <!-- SweetAlert2 -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-  <!-- Custom JS -->
-  <script src="/js/productos.js"></script>
+    <!-- Tabla de productos -->
+    <table id="productosTable" class="display table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th>Precio</th>
+          <th>Cantidad en Almacén</th>
+          <th>Imagen</th>
+          <th>Categoría</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% productos.forEach(producto => { %>
+          <tr>
+            <td><%= producto.id %></td>
+            <td><%= producto.nombre %></td>
+            <td><%= producto.descripcion %></td>
+            <td><%= producto.precio %></td>
+            <td><%= producto.cantidad_en_almacen %></td>
+            <td><img src="/uploads/productos/<%= producto.imagen %>" alt="Imagen del Producto" style="width:100px; height:auto;"></td>
+            <td><%= producto.categoria_nombre %></td>
+            <td>
+              <!-- Botón de editar -->
+              <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editModal<%= producto.id %>">
+                Editar
+              </button>
+              <!-- Modal de Edición -->
+              <div class="modal fade" id="editModal<%= producto.id %>" tabindex="-1" role="dialog" aria-labelledby="editModalLabel<%= producto.id %>" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="editModalLabel<%= producto.id %>">Editar Producto</h5>
+                      <button type="button" the "close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form id="editForm<%= producto.id %>" action="/productos/edit/<%= producto.id %>" method="post" enctype="multipart/form-data">
+                        <div class="form-group">
+                          <label>Nombre</label>
+                          <input type="text" class="form-control" name="nombre" value="<%= producto.nombre %>" required>
+                        </div>
+                        <div class="form-group">
+                          <label>Descripción</label>
+                          <textarea class="form-control" name="descripcion" required><%= producto.descripcion %></textarea>
+                        </div>
+                        <div class="form-group">
+                          <label>Precio</label>
+                          <input type="number" class="form-control" name="precio" value="<%= producto.precio %>" required>
+                        </div>
+                        <div class="form-group">
+                          <label>Cantidad en Almacén</label>
+                          <input type="number" class="form-control" name="cantidad_en_almacen" value="<%= producto.cantidad_en_almacen %>" required>
+                        </div>
+                        <div class="form-group">
+                          <label>Categoría</label>
+                          <select class="form-control" name="categoria_id">
+                            <% categorias.forEach(categoria => { %>
+                              <option value="<%= categoria.id %>" <%= categoria.id == producto.categoria_id ? 'selected' : '' %>><%= categoria.nombre %></option>
+                            <% }); %>
+                          </select>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                          <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Botón de eliminar -->
+              <a href="/productos/delete/<%= producto.id %>" class="btn btn-danger btn-sm delete-button" data-id="<%= producto.id %>">Eliminar</a>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<!-- Custom JS -->
+<script src="/js/productos.js"></script>
 </body>
 </html>
