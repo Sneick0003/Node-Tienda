@@ -1,20 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Showcase</title>
+    <title>Product Showcase - Panadería</title>
     <style>
         body, html {
             margin: 0;
             padding: 0;
             height: 100%;
             font-family: Arial, sans-serif;
+            background-color: #f7e7ce;
         }
         .container {
             display: flex;
             height: 100%;
-            background-color: #f0f0f0;
             padding: 16px;
             box-sizing: border-box;
         }
@@ -29,30 +29,31 @@
         }
         .header {
             height: 48px;
-            background-color: #e0e0e0;
+            background-color: #d2691e; 
             border-radius: 16px 16px 0 0;
             margin-bottom: 16px;
             display: flex;
             align-items: center;
             padding: 0 16px;
+            color: #fff;
         }
         .header-button {
             width: 24px;
             height: 24px;
-            background-color: #c0c0c0;
+            background-color: #a0522d;
             border-radius: 50%;
             margin-right: 16px;
         }
         .header-search {
             width: 192px;
             height: 24px;
-            background-color: #c0c0c0;
+            background-color: #a0522d;
             border-radius: 12px;
             margin-left: auto;
         }
         .content {
             flex: 1;
-            background-color: #e0e0e0;
+            background-color: #ffe4b5; 
             border-radius: 16px;
             padding: 16px;
             display: grid;
@@ -61,17 +62,22 @@
             overflow-y: auto;
         }
         .product {
-            background-color: #ffffff;
+            background-color: #fff;
             border-radius: 8px;
-            padding: 8px;
+            padding: 12px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s; 
         }
-        .product-image {
+        .product:hover {
+            transform: scale(1.1); 
+        }
+        .product img {
             width: 100px;
             height: 100px;
-            background-color: #c0c0c0;
+            object-fit: cover;
             border-radius: 4px;
             margin-bottom: 8px;
         }
@@ -79,20 +85,44 @@
             font-size: 14px;
             font-weight: bold;
             margin-bottom: 4px;
+            color: #8b4513; 
         }
-        .product-price {
+        .original-price {
             font-size: 13px;
-            color: #666;
+            text-decoration: line-through;
+            color: #a0522d;
+        }
+        .discounted-price {
+            font-size: 16px;
+            color: #d2691e;
+            font-weight: bold;
+        }
+        .discount {
+            font-size: 12px;
+            color: #ff4500; 
+            margin-bottom: 8px;
+        }
+        .add-to-cart-btn {
+            padding: 8px 16px;
+            background-color: #ff8c00;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .add-to-cart-btn:hover {
+            background-color: #e07b00;
         }
         .bottom-section {
             height: 64px;
-            background-color: #e0e0e0;
+            background-color: #f4a460;
             border-radius: 16px;
             margin-top: 16px;
             padding: 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            color: #fff;
         }
         .cart-info {
             display: flex;
@@ -101,24 +131,27 @@
         .cart-icon {
             width: 32px;
             height: 32px;
-            background-color: #c0c0c0;
+            background-color: #a0522d;
             border-radius: 50%;
             margin-right: 8px;
         }
         .checkout-button {
             padding: 8px 16px;
-            background-color: #4CAF50;
+            background-color: #d2691e;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
+        }
+        .checkout-button:hover {
+            background-color: #b55517;
         }
         .right-sidebar {
             width: 192px;
             margin-left: 16px;
         }
         .right-top, .right-bottom {
-            background-color: #e0e0e0;
+            background-color: #ffe4b5;
             border-radius: 16px;
             padding: 16px;
             margin-bottom: 16px;
@@ -132,6 +165,7 @@
         h3 {
             font-size: 14px;
             margin: 0 0 8px 0;
+            color: #8b4513;
         }
         .filter-option {
             display: flex;
@@ -141,16 +175,24 @@
         .filter-checkbox {
             width: 16px;
             height: 16px;
-            background-color: #c0c0c0;
+            background-color: #a0522d;
             border-radius: 4px;
             margin-right: 8px;
         }
+        .descuentos-title {
+            font-size: 2rem; /* Tamaño de fuente grande */
+            font-weight: bold; /* Negrita */
+            text-align: center; /* Centrado */
+            margin-bottom: 20px; /* Espacio debajo del encabezado */
+            color: #e78f1b; /* Color del texto */
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+        }
+
     </style>
 </head>
 <body>
     <div class="container">
         <%- include('../partials/header.ejs') %>
-
         <div class="sidebar-placeholder"></div>
         <div class="main-content">
             <div class="header">
@@ -159,66 +201,118 @@
                 <div class="header-button"></div>
                 <div class="header-search"></div>
             </div>
+            <H1 class="descuentos-title">Descuentos Especiales</H1>
             <div class="content">
                 <div class="product">
-                    <div class="product-image"></div>
-                    <div class="product-name">Product 1</div>
-                    <div class="product-price">$19.99</div>
+                    <img src="../../public/img/Desc-01.jpg" alt="Pan Artesanal">
+                    <div class="product-name">Pan Artesanal</div>
+                    <p class="original-price">$20.00</p>
+                    <p class="discounted-price">$15.00</p>
+                    <p class="discount">25% de descuento</p>
+                    <button class="add-to-cart-btn">Añadir al carrito</button>
                 </div>
                 <div class="product">
-                    <div class="product-image"></div>
-                    <div class="product-name">Product 2</div>
-                    <div class="product-price">$24.99</div>
+                    <img src="" alt="Croissant">
+                    <div class="product-name">Croissant</div>
+                    <p class="original-price">$15.00</p>
+                    <p class="discounted-price">$12.00</p>
+                    <p class="discount">20% de descuento</p>
+                    <button class="add-to-cart-btn">Añadir al carrito</button>
                 </div>
                 <div class="product">
-                    <div class="product-image"></div>
-                    <div class="product-name">Product 3</div>
-                    <div class="product-price">$14.99</div>
+                    <img src="" alt="Bollo">
+                    <div class="product-name">Bollo</div>
+                    <p class="original-price">$10.00</p>
+                    <p class="discounted-price">$8.00</p>
+                    <p class="discount">20% de descuento</p>
+                    <button class="add-to-cart-btn">Añadir al carrito</button>
                 </div>
                 <div class="product">
-                    <div class="product-image"></div>
-                    <div class="product-name">Product 4</div>
-                    <div class="product-price">$29.99</div>
+                    <img src="" alt="Galleta">
+                    <div class="product-name">Galleta</div>
+                    <p class="original-price">$5.00</p>
+                    <p class="discounted-price">$4.00</p>
+                    <p class="discount">20% de descuento</p>
+                    <button class="add-to-cart-btn">Añadir al carrito</button>
                 </div>
                 <div class="product">
-                    <div class="product-image"></div>
-                    <div class="product-name">Product 5</div>
-                    <div class="product-price">$39.99</div>
+                    <img src="" alt="Pastel">
+                    <div class="product-name">Pastel</div>
+                    <p class="original-price">$50.00</p>
+                    <p class="discounted-price">$40.00</p>
+                    <p class="discount">20% de descuento</p>
+                    <button class="add-to-cart-btn">Añadir al carrito</button>
                 </div>
                 <div class="product">
-                    <div class="product-image"></div>
-                    <div class="product-name">Product 6</div>
-                    <div class="product-price">$49.99</div>
+                    <img src="" alt="Tarta">
+                    <div class="product-name">Tarta</div>
+                    <p class="original-price">$30.00</p>
+                    <p class="discounted-price">$24.00</p>
+                    <p class="discount">20% de descuento</p>
+                    <button class="add-to-cart-btn">Añadir al carrito</button>
+                </div>
+                <div class="product">
+                    <img src="" alt="Empanada">
+                    <div class="product-name">Empanada</div>
+                    <p class="original-price">$10.00</p>
+                    <p class="discounted-price">$8.00</p>
+                    <p class="discount">20% de descuento</p>
+                    <button class="add-to-cart-btn">Añadir al carrito</button>
+                </div>
+                <div class="product">
+                    <img src="" alt="Palmera">
+                    <div class="product-name">Palmera</div>
+                    <p class="original-price">$15.00</p>
+                    <p class="discounted-price">$12.00</p>
+                    <p class="discount">20% de descuento</p>
+                    <button class="add-to-cart-btn">Añadir al carrito</button>
+                </div>
+                <div class="product">
+                    <img src="" alt="Pastelito">
+                    <div class="product-name">Pastelito</div>
+                    <p class="original-price">$8.00</p>
+                    <p class="discounted-price">$6.00</p>
+                    <p class="discount">25% de descuento</p>
+                    <button class="add-to-cart-btn">Añadir al carrito</button>
+                </div>
+                <div class="product">
+                    <img src="" alt="Bizcocho">
+                    <div class="product-name">Bizcocho</div>
+                    <p class="original-price">$20.00</p>
+                    <p class="discounted-price">$15.00</p>
+                    <p class="discount">25% de descuento</p>
+                    <button class="add-to-cart-btn">Añadir al carrito</button>
                 </div>
             </div>
             <div class="bottom-section">
                 <div class="cart-info">
                     <div class="cart-icon"></div>
-                    <span>3 items</span>
+                    <span>Carrito (0)</span>
                 </div>
-                <button class="checkout-button">Checkout</button>
+                <button class="checkout-button">Finalizar compra</button>
             </div>
         </div>
+
         <div class="right-sidebar">
             <div class="right-top">
-                <h3>FEATURED PRODUCT</h3>
-                <div class="product-image" style="width: 100%; height: 100px; margin-top: 0.5rem;"></div>
-            </div>
-            <div class="right-bottom">
-                <h3>FILTER BY</h3>
+                <h3>Filtrar productos</h3>
                 <div class="filter-option">
                     <div class="filter-checkbox"></div>
-                    <span>Category 1</span>
+                    <span>Sin gluten</span>
                 </div>
                 <div class="filter-option">
                     <div class="filter-checkbox"></div>
-                    <span>Category 2</span>
+                    <span>Vegano</span>
                 </div>
                 <div class="filter-option">
                     <div class="filter-checkbox"></div>
-                    <span>Category 3</span>
+                    <span>Orgánico</span>
                 </div>
             </div>
+                <div class="right-top">
+                    <h3>PRODUCTO DESTACADO</h3>
+                    <div class="product-image" style="width: 100%; height: 100px; margin-top: 0.5rem;"></div>
+                </div>
         </div>
     </div>
 </body>
