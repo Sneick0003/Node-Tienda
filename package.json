@@ -17,7 +17,7 @@
     "datatables.net-dt": "^2.0.8",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
-    "express": "^4.19.2",
+    "express": "^4.21.1",
     "express-myconnection": "^1.0.4",
     "express-session": "^1.18.0",
     "jsonwebtoken": "^9.0.2",
