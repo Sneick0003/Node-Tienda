@@ -44,6 +44,8 @@ app.use('/', require('./routes/index')); // Ruta para la vista raíz
 
 app.use('/inicio', require('./routes/login.router')); // Ruta para la Vista login
 app.use('/productos', require('./routes/producto'));// ruta para comprar productos 
+app.use('/nosotros', require('./routes/nosotrosRouter'));// ruta para ver la vista nosotros
+app.use('/descuentos', require('./routes/decuentoRouter'));// ruta para ver los descuentos
 
 
 // Rutas protegidas
@@ -57,6 +59,11 @@ app.use('/lista', isAuthenticated, require('./routes/categoria.Router'));// ruta
 // Manejo de errores 404
 app.use((req, res) => {
   res.status(404).sendFile('status.html', { root: path.join(__dirname, 'public/html/') });
+});
+
+// Servir manifest.json desde la raíz del proyecto
+app.get('/manifest.json', (req, res) => {
+  res.sendFile(path.join(__dirname, 'manifest.json'));
 });
 
 app.listen(process.env.PORT || 3000, () => {
