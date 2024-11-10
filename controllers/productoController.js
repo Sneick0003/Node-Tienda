@@ -1,166 +1,114 @@
-const path = require('path');
-const multer = require('multer');
-
-// Configuración de Multer para la carga de archivos
-const storage = multer.diskStorage({
-    destination: path.join(__dirname, '../public/uploads/productos'),
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname));
-    }
-});
-
-const upload = multer({ storage: storage });
-
 const controller = {};
 
-// Mostrar todos los productos con sus categorías para la vista
+// Mostrar todos los productos y categorías
 controller.mostrar = (req, res) => {
     req.getConnection((err, conn) => {
-        if (err) {
-            console.error('Error al conectar a la base de datos:', err);
-            return res.status(500).json({ message: "Error en la conexión de base de datos", error: err });
-        }
-        conn.query('SELECT * FROM categorias', (errorCategorias, categorias) => {
-            if (errorCategorias) {
-                console.error('Error al cargar categorías:', errorCategorias);
-                return res.status(500).json({ message: "Error al cargar categorías", error: errorCategorias });
+        if (err) return res.status(500).send('Error en el servidor: ' + err.message);
+        
+        // Consultar productos
+        conn.query('SELECT * FROM productos', (error, productos) => {
+            if (error) {
+                console.error('Error al mostrar los productos:', error);
+                return res.status(400).json(error);
             }
-            conn.query('SELECT productos.*, categorias.nombre as categoria_nombre FROM productos LEFT JOIN categorias ON productos.categoria_id = categorias.id', (errorProductos, productos) => {
-                if (errorProductos) {
-                    console.error('Error al mostrar los productos:', errorProductos);
-                    return res.status(500).json({ message: "Error al mostrar productos", error: errorProductos });
+            
+            // Consultar categorías
+            conn.query('SELECT * FROM categorias', (error, categorias) => {
+                if (error) {
+                    console.error('Error al mostrar las categorías:', error);
+                    return res.status(400).json(error);
                 }
-                // Asegúrate de que productos y categorias están definidos, incluso si están vacíos
-                res.render("dashboard/productos", { productos: productos || [], categorias: categorias || [] });
+                
+                // Renderizar la vista y pasar productos y categorías
+                res.render("dashboard/productos", { productos: productos, categorias: categorias });
             });
         });
     });
 };
 
 
-// Renderizar el formulario de creación con categorías disponibles
-controller.renderCrear = (req, res) => {
-    req.getConnection((err, conn) => {
-        if (err) {
-            console.error('Error al conectar a la base de datos:', err);
-            res.status(500).json({ message: "Error en la conexión de base de datos", error: err });
-            return;
-        }
-        conn.query('SELECT * FROM categorias', (error, categorias) => {
-            if (error) {
-                console.error('Error al cargar categorías:', error);
-                res.status(500).json({ message: "Error al cargar categorías", error });
-                return;
-            }
-            res.render("dashboard/addProducto", { categorias });
-        });
-    });
-};
-
-// Crear un nuevo producto
-controller.crear = [upload.single('imagen'), (req, res) => {
+// Crear un producto nuevo
+controller.crear = (req, res) => {
     const { nombre, descripcion, precio, cantidad_en_almacen, categoria_id } = req.body;
-    req.getConnection((err, conn) => {
-        if (err) {
-            console.error('Error al conectar a la base de datos:', err);
-            res.status(500).json({ message: "Error en la conexión de base de datos", error: err });
-            return;
-        }
 
-        conn.query('INSERT INTO productos (nombre, descripcion, precio, cantidad_en_almacen, categoria_id) VALUES (?, ?, ?, ?, ?)', [nombre, descripcion, precio, cantidad_en_almacen, categoria_id], (error, results) => {
+    // Verifica que se haya subido una imagen
+    if (!req.file) {
+        return res.status(400).send("No se ha subido ninguna imagen.");
+    }
+
+    const imagen = req.file.filename; // Solo guarda el nombre del archivo
+
+    const nuevoProducto = { 
+        nombre, 
+        descripcion, 
+        precio, 
+        cantidad_en_almacen, 
+        cantidad_vendida: 0, 
+        categoria_id, 
+        imagen
+    };
+
+    req.getConnection((err, conn) => {
+        if (err) return res.status(500).send('Error en el servidor: ' + err.message);
+        conn.query('INSERT INTO productos SET ?', nuevoProducto, (error, resultados) => {
             if (error) {
                 console.error('Error al crear un producto:', error);
-                res.status(500).json({ message: "Error al crear el producto", error });
-                return;
-            }
-
-            // Si se subió una imagen, inserta su ruta en la tabla 'imagenes'
-            if (req.file) {
-                const imagenUrl = req.file.path;
-                const productoId = results.insertId; // ID del producto recién creado
-                conn.query('INSERT INTO imagenes (producto_id, url_imagen, descripcion) VALUES (?, ?, ?)', [productoId, imagenUrl, 'Imagen del producto'], (imgError) => {
-                    if (imgError) {
-                        console.error('Error al guardar la imagen del producto:', imgError);
-                        res.status(500).json({ message: "Error al guardar imagen del producto", error: imgError });
-                        return;
-                    }
-                    res.redirect("/almacen/productos");
-                });
+                res.status(400).json(error);
             } else {
                 res.redirect("/almacen/productos");
             }
         });
     });
-}];
+};
 
-// Renderizar el formulario de edición con categorías
-controller.renderEditar = (req, res) => {
+// Editar un producto
+controller.editar = (req, res) => {
     const { id } = req.params;
+    const { nombre, descripcion, precio, cantidad_en_almacen, categoria_id } = req.body;
+
+    // Crea el objeto con los datos que se actualizarán
+    let actualizadoProducto = { nombre, descripcion, precio, cantidad_en_almacen, categoria_id };
+
+    // Si hay una nueva imagen, actualiza también el campo de la imagen
+    if (req.file) {
+        actualizadoProducto.imagen = req.file.filename;
+    }
+
     req.getConnection((err, conn) => {
-        if (err) {
-            console.error('Error al conectar a la base de datos:', err);
-            res.status(500).json({ message: "Error en la conexión de base de datos", error: err });
-            return;
-        }
-        conn.query('SELECT * FROM productos WHERE id = ?', [id], (errorProducto, producto) => {
-            if (errorProducto) {
-                console.error('Error al cargar el producto:', errorProducto);
-                res.status(500).json({ message: "Error al cargar el producto", error: errorProducto });
-                return;
+        if (err) return res.status(500).send('Error en el servidor: ' + err.message);
+        conn.query('UPDATE productos SET ? WHERE id = ?', [actualizadoProducto, id], (error, resultados) => {
+            if (error) {
+                console.error('Error al editar un producto:', error);
+                res.status(400).json(error);
+            } else {
+                res.redirect("/almacen/productos");
             }
-            conn.query('SELECT * FROM categorias', (errorCategorias, categorias) => {
-                if (errorCategorias) {
-                    console.error('Error al cargar categorías:', errorCategorias);
-                    res.status(500).json({ message: "Error al cargar categorías", error: errorCategorias });
-                    return;
-                }
-                res.render("dashboard/editProducto", { producto: producto[0], categorias });
-            });
         });
     });
 };
-
-// Editar un producto existente
-controller.editar = [upload.single('imagen'), (req, res) => {
-    const { id, nombre, descripcion, precio, cantidad_en_almacen, categoria_id } = req.body;
-    const imagenActual = req.body.imagenActual; // Asumimos que hay un campo oculto en el formulario que mantiene la imagen actual si no se sube una nueva
-    const imagen = req.file ? req.file.path : imagenActual;
-    req.getConnection((err, conn) => {
-        if (err) {
-            console.error('Error al conectar a la base de datos:', err);
-            res.status(500).json({ message: "Error en la conexión de base de datos", error: err });
-            return;
-        }
-
-        conn.query('UPDATE productos SET nombre = ?, descripcion = ?, precio = ?, cantidad_en_almacen = ?, categoria_id = ?, imagen = ? WHERE id = ?', [nombre, descripcion, precio, cantidad_en_almacen, categoria_id, imagen, id], (error, results) => {
-            if (error) {
-                console.error('Error al editar un producto:', error);
-                res.status(500).json({ message: "Error al editar el producto", error });
-                return;
-            }
-            res.redirect("/almacen/productos");
-        });
-    });
-}];
 
 // Eliminar un producto
 controller.eliminar = (req, res) => {
     const { id } = req.params;
+
     req.getConnection((err, conn) => {
-        if (err) {
-            console.error('Error al conectar a la base de datos:', err);
-            res.status(500).json({ message: "Error en la conexión de base de datos", error: err });
-            return;
-        }
+        if (err) return res.status(500).json({ success: false, message: 'Error en el servidor: ' + err.message });
+
         conn.query('DELETE FROM productos WHERE id = ?', [id], (error, resultados) => {
             if (error) {
                 console.error('Error al eliminar un producto:', error);
-                res.status(500).json({ message: "Error al eliminar el producto", error });
-                return;
+                return res.status(400).json({ success: false, message: 'Error al eliminar el producto.' });
             }
-            res.redirect("/almacen/productos");
+
+            if (resultados.affectedRows === 0) {
+                return res.status(404).json({ success: false, message: 'Producto no encontrado.' });
+            }
+
+            // Si el producto se eliminó correctamente, responde con éxito
+            res.json({ success: true, message: 'Producto eliminado correctamente.' });
         });
     });
 };
+
 
 module.exports = controller;

@@ -19,36 +19,15 @@
                 <div class="header-search"></div>
             </div>
             <div class="content">
-                <div class="product">
-                    <div class="product-image"></div>
-                    <div class="product-name">Product 1</div>
-                    <div class="product-price">$19.99</div>
-                </div>
-                <div class="product">
-                    <div class="product-image"></div>
-                    <div class="product-name">Product 2</div>
-                    <div class="product-price">$24.99</div>
-                </div>
-                <div class="product">
-                    <div class="product-image"></div>
-                    <div class="product-name">Product 3</div>
-                    <div class="product-price">$14.99</div>
-                </div>
-                <div class="product">
-                    <div class="product-image"></div>
-                    <div class="product-name">Product 4</div>
-                    <div class="product-price">$29.99</div>
-                </div>
-                <div class="product">
-                    <div class="product-image"></div>
-                    <div class="product-name">Product 5</div>
-                    <div class="product-price">$39.99</div>
-                </div>
-                <div class="product">
-                    <div class="product-image"></div>
-                    <div class="product-name">Product 6</div>
-                    <div class="product-price">$49.99</div>
-                </div>
+                <% productos.forEach(producto => { %>
+                    <div class="product">
+                        <div class="product-image">
+                            <img src="<%= producto.url_imagen %>" alt="<%= producto.nombre %>" style="width: 100%; height: auto;">
+                        </div>
+                        <div class="product-name"><%= producto.nombre %></div>
+                        <div class="product-price">$<%= producto.precio.toFixed(2) %></div>
+                    </div>
+                <% }); %>
             </div>
             <div class="bottom-section">
                 <div class="cart-info">

@@ -4,13 +4,14 @@ const mysql = require('mysql');
 const myConnection = require('express-myconnection');
 const session = require('express-session');
 const dotenv = require('dotenv');
+const fs = require('fs');
 const { isAuthenticated } = require('./middleware/authMiddleware');
 const app = express();
 
 // Cargar variables de entorno
 dotenv.config();
 
-// Configuración para la base de datos
+// Configuración de la base de datos
 const dbConfig = {
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -30,31 +31,27 @@ app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
-  cookie: { maxAge: 3600000 } // Configura según tus necesidades
+  cookie: { maxAge: 3600000 }
 }));
 
 // Middleware para parsear formularios
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 
 // Rutas públicas
-app.use('/', require('./routes/index')); // Ruta para la vista raíz
-
-app.use('/inicio', require('./routes/login.router')); // Ruta para la Vista login
-app.use('/productos', require('./routes/producto'));// ruta para comprar productos 
-app.use('/nosotros', require('./routes/nosotrosRouter'));// ruta para ver la vista nosotros
-app.use('/descuentos', require('./routes/decuentoRouter'));// ruta para ver los descuentos
-
+app.use('/', require('./routes/index'));
+app.use('/inicio', require('./routes/login.router'));
+app.use('/productos', require('./routes/producto'));
+app.use('/nosotros', require('./routes/nosotrosRouter'));
+app.use('/descuentos', require('./routes/decuentoRouter'));
 
 // Rutas protegidas
-app.use('/home', isAuthenticated, require('./routes/home')); // Ruta para después de iniciar sesión (protegida)
-app.use('/almacen', isAuthenticated, require('./routes/producto.router')); // Ruta del CRUD de productos (protegida)
-app.use('/compras', isAuthenticated, require('./routes/compras'));// ruta para ver las compras
-app.use('/lista', isAuthenticated, require('./routes/categoria.Router'));// ruta para ver las categorias
-
-
+app.use('/home', isAuthenticated, require('./routes/home'));
+app.use('/almacen', isAuthenticated, require('./routes/producto.router')); // Rutas con carga de imágenes
+app.use('/compras', isAuthenticated, require('./routes/compras'));
+app.use('/lista', isAuthenticated, require('./routes/categoria.Router'));
 
 // Manejo de errores 404
 app.use((req, res) => {
