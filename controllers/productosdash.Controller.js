@@ -61,28 +61,52 @@ controller.crear = (req, res) => {
     });
 };
 
-// Editar un producto
 controller.editar = (req, res) => {
     const { id } = req.params;
     const { nombre, descripcion, precio, cantidad_en_almacen, categoria_id } = req.body;
 
-    // Crea el objeto con los datos que se actualizarán
-    let actualizadoProducto = { nombre, descripcion, precio, cantidad_en_almacen, categoria_id };
-
-    // Si hay una nueva imagen, actualiza también el campo de la imagen
-    if (req.file) {
-        actualizadoProducto.imagen = req.file.filename;
-    }
-
     req.getConnection((err, conn) => {
-        if (err) return res.status(500).send('Error en el servidor: ' + err.message);
-        conn.query('UPDATE productos SET ? WHERE id = ?', [actualizadoProducto, id], (error, resultados) => {
+        if (err) {
+            console.error('Error de conexión:', err);
+            return res.status(500).json({ success: false, message: 'Error en el servidor: ' + err.message });
+        }
+
+        // Obtener los datos actuales del producto
+        conn.query('SELECT * FROM productos WHERE id = ?', [id], (error, results) => {
             if (error) {
-                console.error('Error al editar un producto:', error);
-                res.status(400).json(error);
-            } else {
-                res.redirect("/almacen/productos");
+                console.error('Error al obtener el producto:', error);
+                return res.status(400).json({ success: false, message: 'Error al obtener el producto: ' + error.message });
             }
+
+            if (results.length === 0) {
+                return res.status(404).json({ success: false, message: 'Producto no encontrado.' });
+            }
+
+            const productoActual = results[0];
+
+            // Preparar el objeto de actualización
+            const productoActualizado = {
+                nombre: nombre || productoActual.nombre,
+                descripcion: descripcion || productoActual.descripcion,
+                precio: precio ? parseFloat(precio) : productoActual.precio,
+                cantidad_en_almacen: cantidad_en_almacen ? parseInt(cantidad_en_almacen) : productoActual.cantidad_en_almacen,
+                categoria_id: categoria_id ? parseInt(categoria_id) : productoActual.categoria_id,
+                imagen: req.file ? req.file.filename : productoActual.imagen // Usar la nueva imagen si se subió
+            };
+
+            // Verifica si se ha subido una nueva imagen
+            if (req.file) {
+                productoActualizado.imagen = req.file.filename;
+            }
+
+            // Actualizar el producto en la base de datos
+            conn.query('UPDATE productos SET ? WHERE id = ?', [productoActualizado, id], (error, resultados) => {
+                if (error) {
+                    console.error('Error al actualizar el producto:', error);
+                    return res.status(400).json({ success: false, message: 'Error al actualizar el producto: ' + error.message });
+                }
+                res.json({ success: true, message: 'Producto actualizado correctamente.' });
+            });
         });
     });
 };

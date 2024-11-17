@@ -95,7 +95,7 @@
                     </button>
                   </div>
                   <div class="modal-body">
-                    <form action="/almacen/productos/edit/<%= producto.id %>" method="POST" enctype="multipart/form-data">
+                    <form id="editForm<%= producto.id %>" action="/almacen/productos/edit/<%= producto.id %>" method="POST" enctype="multipart/form-data">
                       <div class="form-group">
                         <label>Nombre</label>
                         <input type="text" name="nombre" class="form-control" value="<%= producto.nombre %>" required>

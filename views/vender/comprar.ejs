@@ -22,40 +22,68 @@
                 <% productos.forEach(producto => { %>
                     <div class="product">
                         <div class="product-image">
-                            <img src="<%= producto.url_imagen %>" alt="<%= producto.nombre %>" style="width: 100%; height: auto;">
+                            <img src="/uploads/<%= producto.imagen %>" alt="<%= producto.nombre %>" style="width: 100%; height: auto;">
                         </div>
                         <div class="product-name"><%= producto.nombre %></div>
                         <div class="product-price">$<%= producto.precio.toFixed(2) %></div>
+                        <form action="/productos/agregar-al-carrito" method="POST" class="add-to-cart-form">
+                            <input type="hidden" name="producto_id" value="<%= producto.id %>">
+                            <div class="quantity-container">
+                                <input type="number" name="cantidad" min="1" value="1" class="quantity-input">
+                                <button type="submit" class="add-to-cart-button">Agregar</button>
+                            </div>
+                        </form>
                     </div>
                 <% }); %>
             </div>
+
             <div class="bottom-section">
                 <div class="cart-info">
-                    <div class="cart-icon"></div>
-                    <span>3 items</span>
+                    <span><%= Object.keys(carrito).length %> items</span>
                 </div>
-                <button class="checkout-button">Checkout</button>
+
+                <% if (Object.keys(carrito).length > 0) { %>
+                    <div class="cart-items">
+                        <% Object.values(carrito).forEach(item => { %>
+                            <div class="cart-item">
+                                <div class="cart-item-circle">
+                                    <% if (item.imagen) { %>
+                                        <img src="/uploads/<%= item.imagen %>" alt="<%= item.nombre %>">
+                                    <% } else { %>
+                                        <span>Imagen no disponible</span>
+                                    <% } %>
+                                </div>
+                                <div class="cart-item-count-container">
+                                    <span class="cart-item-count"><%= item.cantidad %></span>
+                                </div>
+                            </div>
+                        <% }); %>
+                    </div>
+                    <form action="/productos/finalizar-compra" method="POST">
+                        <button type="submit" class="checkout-button">Comprar</button>
+                    </form>
+                <% } else { %>
+                    <p>Your cart is empty</p>
+                <% } %>
             </div>
         </div>
+
+        <!-- Right sidebar with dynamic categories for filtering -->
         <div class="right-sidebar">
-            <div class="right-top">
-                <h3>FEATURED PRODUCT</h3>
-                <div class="product-image" style="width: 100%; height: 100px; margin-top: 0.5rem;"></div>
-            </div>
+
             <div class="right-bottom">
-                <h3>FILTER BY</h3>
-                <div class="filter-option">
-                    <div class="filter-checkbox"></div>
-                    <span>Category 1</span>
-                </div>
-                <div class="filter-option">
-                    <div class="filter-checkbox"></div>
-                    <span>Category 2</span>
-                </div>
-                <div class="filter-option">
-                    <div class="filter-checkbox"></div>
-                    <span>Category 3</span>
-                </div>
+                <h3>FILTER BY CATEGORY</h3>
+                <ul class="category-list">
+                    <li><a href="/productos/comprar" class="<%= !categoriaSeleccionada ? 'active' : '' %>">All</a></li>
+                    <% categorias.forEach(cat => { %>
+                        <li>
+                            <a href="/productos/comprar?categoria=<%= cat.id %>" 
+                               class="<%= categoriaSeleccionada == cat.id ? 'active' : '' %>">
+                                <%= cat.nombre %>
+                            </a>
+                        </li>
+                    <% }); %>
+                </ul>
             </div>
         </div>
     </div>

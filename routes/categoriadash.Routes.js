@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const categoriasController = require('../controllers/categoriasController');  // Verifica la ruta y el nombre del archivo
+const categoriasController = require('../controllers/categoriasdash.controller');  // Verifica la ruta y el nombre del archivo
 
 router.get('/categoria', categoriasController.mostrar);
 router.post('/categoria/add', categoriasController.crear);

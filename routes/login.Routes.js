@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const loginController = require('../controllers/loginController');
+const loginController = require('../controllers/login.controller');
 
 // Ruta para renderizar la vista de login y registro
 router.get('/login', loginController.renderLogin);

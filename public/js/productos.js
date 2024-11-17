@@ -5,40 +5,27 @@ $(document).ready(function() {
     // Toggle the add product form
     $('#toggleFormBtn').click(function() {
         $('#newProductForm').toggle('slow', function() {
-            if ($('#newProductForm').is(':visible')) {
-                $('#toggleFormBtn').text('Cancelar');
-            } else {
-                $('#toggleFormBtn').text('Agregar Producto');
-            }
+            $('#toggleFormBtn').text($('#newProductForm').is(':visible') ? 'Cancelar' : 'Agregar Producto');
         });
     });
 
     // Handle new product form submission
     $('#newProductForm').on('submit', function(e) {
         e.preventDefault();
-        const formData = new FormData(this); // Usa FormData para manejar archivos
+        const formData = new FormData(this);
 
         $.ajax({
-            url: $(this).attr('action'), // URL en el atributo action
+            url: $(this).attr('action'),
             type: 'POST',
             data: formData,
             contentType: false,
             processData: false,
             success: function(response) {
-                Swal.fire(
-                    'Producto Agregado!',
-                    'El nuevo producto ha sido agregado exitosamente.',
-                    'success'
-                ).then(() => {
-                    location.reload(); // Recarga la página para actualizar la lista de productos
-                });
+                Swal.fire('Producto Agregado!', 'El nuevo producto ha sido agregado exitosamente.', 'success')
+                    .then(() => location.reload()); // Recargar para ver el nuevo producto
             },
             error: function(err) {
-                Swal.fire(
-                    'Error!',
-                    'No se pudo agregar el producto.',
-                    'error'
-                );
+                Swal.fire('Error!', 'No se pudo agregar el producto.', 'error');
             }
         });
     });
@@ -47,6 +34,7 @@ $(document).ready(function() {
     $(document).on('click', '.delete-button', function(e) {
         e.preventDefault();
         const productId = $(this).data('id');
+        
         Swal.fire({
             title: '¿Estás seguro?',
             text: "No podrás revertir esto.",
@@ -62,28 +50,14 @@ $(document).ready(function() {
                     method: 'DELETE',
                     success: function(response) {
                         if (response.success) {
-                            Swal.fire(
-                                'Eliminado!',
-                                'El producto ha sido eliminado.',
-                                'success'
-                            ).then(() => {
-                                // Elimina la fila de la tabla sin recargar la página
-                                $('#producto-' + productId).remove();
-                            });
+                            Swal.fire('Eliminado!', 'El producto ha sido eliminado.', 'success')
+                                .then(() => $('#producto-' + productId).remove()); // Elimina la fila de la tabla
                         } else {
-                            Swal.fire(
-                                'Error!',
-                                response.message || 'No se pudo eliminar el producto.',
-                                'error'
-                            );
+                            Swal.fire('Error!', response.message || 'No se pudo eliminar el producto.', 'error');
                         }
                     },
                     error: function(err) {
-                        Swal.fire(
-                            'Error!',
-                            'No se pudo eliminar el producto.',
-                            'error'
-                        );
+                        Swal.fire('Error!', 'No se pudo eliminar el producto.', 'error');
                     }
                 });
             }
@@ -91,34 +65,30 @@ $(document).ready(function() {
     });
 
     // Handle edit product form submission
-    $(document).on('submit', 'form[id^="editForm"]', function(e) {
-        e.preventDefault();
-        const form = $(this);
-        const productId = form.attr('action').split('/').pop();
-        const formData = new FormData(this); // Usa FormData para manejar archivos y datos
+// Handle edit product form submission
+$(document).on('submit', 'form[id^="editForm"]', function(e) {
+    e.preventDefault();
+    const form = $(this);
+    const formData = new FormData(this);
 
-        $.ajax({
-            url: '/almacen/productos/edit/' + productId,
-            method: 'POST',
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function(response) {
-                Swal.fire(
-                    'Actualizado!',
-                    'El producto ha sido actualizado correctamente.',
-                    'success'
-                ).then(() => {
-                    location.reload(); // Recarga la página para reflejar los cambios de edición
-                });
-            },
-            error: function(err) {
-                Swal.fire(
-                    'Error!',
-                    'No se pudo actualizar el producto.',
-                    'error'
-                );
+    $.ajax({
+        url: form.attr('action'),
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function(response) {
+            if (response.success) {
+                Swal.fire('Actualizado!', 'El producto ha sido actualizado correctamente.', 'success')
+                    .then(() => location.reload()); // Recargar para ver los cambios
+            } else {
+                Swal.fire('Error!', response.message || 'No se pudo actualizar el producto.', 'error');
             }
-        });
+        },
+        error: function(err) {
+            Swal.fire('Error!', 'No se pudo actualizar el producto.', 'error');
+        }
     });
+});
+
 });

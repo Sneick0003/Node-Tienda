@@ -10,7 +10,16 @@ CREATE TABLE categorias (
     descripcion TEXT
 );
 
--- Creación de la tabla productos
+-- Creación de la tabla ofertas (ahora independiente)
+CREATE TABLE ofertas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    descuento DECIMAL(5, 2) NOT NULL,
+    descripcion TEXT,
+    fecha_inicio DATETIME,
+    fecha_fin DATETIME
+);
+
+-- Creación de la tabla productos (con dependencia de ofertas)
 CREATE TABLE productos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
@@ -19,8 +28,10 @@ CREATE TABLE productos (
     cantidad_en_almacen INT NOT NULL,
     cantidad_vendida INT DEFAULT 0,
     categoria_id INT,
+    oferta_id INT DEFAULT NULL,
     imagen VARCHAR(255) DEFAULT NULL,
-    FOREIGN KEY (categoria_id) REFERENCES categorias(id)
+    FOREIGN KEY (categoria_id) REFERENCES categorias(id),
+    FOREIGN KEY (oferta_id) REFERENCES ofertas(id)
 );
 
 -- Creación de la tabla login
@@ -72,17 +83,6 @@ CREATE TABLE compras (
     FOREIGN KEY (usuario_id) REFERENCES login(id)
 );
 
--- Creación de la tabla ofertas
-CREATE TABLE ofertas (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    producto_id INT,
-    descuento DECIMAL(5, 2) NOT NULL,
-    descripcion TEXT,
-    fecha_inicio DATETIME,
-    fecha_fin DATETIME,
-    FOREIGN KEY (producto_id) REFERENCES productos(id)
-);
-
 -- Inserciones iniciales
 INSERT INTO categorias (nombre, descripcion) VALUES
     ('Panadería', 'Productos frescos de panadería'),
@@ -110,16 +110,18 @@ INSERT INTO rol_permisos (rol_id, permiso_id) VALUES
     (1, 3),
     (1, 4);
 
-INSERT INTO productos (nombre, descripcion, precio, cantidad_en_almacen, cantidad_vendida, categoria_id) VALUES
-    ('Pan Integral', 'Pan hecho con harina integral', 20.00, 50, 10, 1),
-    ('Croissant', 'Croissant de mantequilla fresco', 25.00, 30, 5, 2),
-    ('Baguette', 'Pan baguette crujiente', 30.00, 40, 7, 1),
-    ('Hamburguesa', 'Pan de hamburguesa suave', 15.00, 100, 20, 1),
-    ('Galleta', 'Galleta de chocolate casera', 10.00, 200, 50, 2),
-    ('Galleta Salada', 'Galleta salada para acompañar', 12.00, 150, 25, 2);
+INSERT INTO ofertas (descuento, descripcion, fecha_inicio, fecha_fin) VALUES
+    (10.00, '10% de descuento en productos seleccionados', '2024-01-01', '2024-01-31'),
+    (15.00, '15% de descuento en productos de repostería', '2024-02-01', '2024-02-28');
 
-INSERT INTO ofertas (producto_id, descuento, descripcion, fecha_inicio, fecha_fin) VALUES
-    (1, 10.00, '10% de descuento en Pan Integral', '2024-01-01', '2024-01-31');
+INSERT INTO productos (nombre, descripcion, precio, cantidad_en_almacen, cantidad_vendida, categoria_id, oferta_id) VALUES
+    ('Pan Integral', 'Pan hecho con harina integral', 20.00, 50, 10, 1, 1),
+    ('Croissant', 'Croissant de mantequilla fresco', 25.00, 30, 5, 2, NULL),
+    ('Baguette', 'Pan baguette crujiente', 30.00, 40, 7, 1, 2),
+    ('Hamburguesa', 'Pan de hamburguesa suave', 15.00, 100, 20, 1, NULL),
+    ('Galleta', 'Galleta de chocolate casera', 10.00, 200, 50, 2, NULL),
+    ('Galleta Salada', 'Galleta salada para acompañar', 12.00, 150, 25, 2, 2);
+
 
 -- Actualizar contraseñas para mayor seguridad
 UPDATE login

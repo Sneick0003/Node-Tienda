@@ -41,17 +41,20 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 
 // Rutas públicas
-app.use('/', require('./routes/index'));
-app.use('/inicio', require('./routes/login.router'));
-app.use('/productos', require('./routes/producto'));
-app.use('/nosotros', require('./routes/nosotrosRouter'));
-app.use('/descuentos', require('./routes/decuentoRouter'));
+app.use('/', require('./routes/index.Routes'));
+app.use('/productos', require('./routes/productos.Routes'));
+app.use('/nosotros', require('./routes/nosotros.Routes'));
+app.use('/descuentos', require('./routes/decuento.Routes'));
+
+//login 
+app.use('/inicio', require('./routes/login.Routes'));
 
 // Rutas protegidas
-app.use('/home', isAuthenticated, require('./routes/home'));
-app.use('/almacen', isAuthenticated, require('./routes/producto.router')); // Rutas con carga de imágenes
-app.use('/compras', isAuthenticated, require('./routes/compras'));
-app.use('/lista', isAuthenticated, require('./routes/categoria.Router'));
+app.use('/home', isAuthenticated, require('./routes/homedash.Routes'));
+app.use('/almacen', isAuthenticated, require('./routes/productosdash.Routes')); // Rutas con carga de imágenes
+app.use('/compras', isAuthenticated, require('./routes/comprasdash.routes'));
+app.use('/lista', isAuthenticated, require('./routes/categoriadash.Routes'));
+app.use('/ofertas', isAuthenticated, require('./routes/descuentosdash.Routes'));
 
 // Manejo de errores 404
 app.use((req, res) => {
